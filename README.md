@@ -11,7 +11,7 @@ git clone --recurse-submodules https://github.com/lxtqa/ArchSync.git
 Run the following command in the root directory of this project.
 
 ```
-docker build --network=host -t archsync .
+docker build -t archsync .
 ```
 
 ### Test & Run

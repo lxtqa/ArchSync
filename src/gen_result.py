@@ -88,7 +88,6 @@ def init_ast(ast_root,xml_root):
 
 
 def map(root,mapping_dic):
-    #获取产生修改部分的补丁代码中需要进行映射的操作
     queue = [root]
     while queue:
         xml = queue.pop()
@@ -102,9 +101,6 @@ def map(root,mapping_dic):
 
 
 def get_newname(node_name,mapping_dic):
-    """
-        对name节点进行映射
-    """
     if node_name not in mapping_dic.keys():
         return node_name
     candidate = []
@@ -147,7 +143,6 @@ def parse_diff(diff,ast1,ast1_,ast2,match_dic11_,match_dic12,mapping_dic):
         father1.xml.insert(desRank,source.xml)
         father1.children.insert(desRank,source)
 
-        #不在father中找,而是直接找前后关系
 
         new_source = copy.deepcopy(source)
 
@@ -232,7 +227,6 @@ def parse_diff(diff,ast1,ast1_,ast2,match_dic11_,match_dic12,mapping_dic):
             father2.xml.remove(new_source.xml)
             father2.children.remove(new_source)
 
-            #插入需要找到前后能够产生映射的地方
             if source.xml.tail != source_.xml.tail:
                 source.xml.tail = source_.xml.tail
                 new_source.xml.tail = source_.xml.tail
@@ -274,10 +268,6 @@ def gen_result(file_string1,
                 MATCHER_ID,
                 TREE_GENERATOR_ID
                 ):
-    '''
-    cfile_name1为架构a下的文件, cfile2_name2为架构b下的文件, cfile_name1_为cfile_name1修改后的文件
-    取cfile1和cfile2的match部分, 取cfile1与cfile1_的diff部分
-    '''
 
     with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile1, \
         tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile1_, \
@@ -354,46 +344,42 @@ def gen_result(file_string1,
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='命令行参数处理程序')
+    parser = argparse.ArgumentParser(description='Generate result from three input files.')
 
-    # 添加必选项输入文件目录
-    parser.add_argument('input_directory1', type=str, help='输入文件1')
-    parser.add_argument('input_directory2', type=str, help='输入文件2')
-    parser.add_argument('input_directory1_', type=str, help='输入文件1_')
 
-    # 添加可选项输出文件目录和其他选项
-    # parser.add_argument('-d', '--use_docker', action='store_true', help='使用Docker')
-    parser.add_argument('-o', '--output_directory', type=str, help='指定输出文件')
-    parser.add_argument('-m', '--matcher_id', type=str, default='gumtree-simple', help='指定MATCHER_ID, 默认为gumtree')
-    parser.add_argument('-g', '--tree_generator_id', type=str, default='cpp-srcml', help='指定TREE_GENERATOR_ID, 默认为cpp-srcml')
+    parser.add_argument('input_file1', type=str, help="Original file 1 (source file before modification).")
+    parser.add_argument('input_file2', type=str, help="File 2 which is the mirror of file 1.")
+    parser.add_argument('input_file1_', type=str, help="Modified version of file 1, representing the updated state after changes.")
 
-    # 解析命令行参数
+
+
+
+
+    parser.add_argument('-o', '--output_file', type=str)
+    parser.add_argument('-m', '--matcher_id', type=str, default='gumtree-simple', help='default: gumtree-simple')
+    parser.add_argument('-g', '--tree_generator_id', type=str, default='cpp-srcml', help='default: cpp-srcml')
+
+
     args = parser.parse_args()
 
-    # 根据参数执行相应操作
-    # if args.use_docker:
-    #     print('使用Docker')
-        # 在这里执行使用Docker的相关操作
 
 
-    # 输出必选项输入文件目录
-    print('输入文件1:', args.input_directory1)
-    print('输入文件2:', args.input_directory2)
-    print('输入文件1_:', args.input_directory1)
-    # use_docker = args.use_docker
+    print('input file1:', "/diff/"+args.input_file1)
+    print('input file2:', "/diff/"+args.input_file2)
+    print('input file1_:', "/diff/"+args.input_file1)
     MATCHER_ID = args.matcher_id
     TREE_GENERATOR_ID=args.tree_generator_id
-    # try:
-    cfile1 = open("/diff/"+args.input_directory1).read()
-    cfile2 = open("/diff/"+args.input_directory2).read()
-    cfile1_ = open("/diff/"+args.input_directory1_).read()
-    # except:
-    #     print("Error: 输入文件不存在。请检查路径是否正确。")
-    #     exit(1)
+    try:
+        cfile1 = open("/diff/"+args.input_file1).read()
+        cfile2 = open("/diff/"+args.input_file2).read()
+        cfile1_ = open("/diff/"+args.input_file1_).read()
+    except:
+        print("Error: Cannot open input files.")
+        exit(1)
     modify_hex(cfile1)
     modify_hex(cfile2)
-    if args.output_directory:
-        with open("/diff/" + args.output_directory, "w") as f:
+    if args.output_file:
+        with open("/diff/" + args.output_file, "w") as f:
             f.write(gen_result(file_string1=cfile1,file_string2=cfile2,file_string1_=cfile1_,mapping_dic ={},use_docker=False,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID))
     else:
         print(gen_result(file_string1=cfile1,file_string2=cfile2,file_string1_=cfile1_,mapping_dic ={},use_docker=False,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID))
