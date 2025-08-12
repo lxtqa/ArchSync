@@ -1,0 +1,7 @@
+diff --git a/1.cc b/1_.cc
+index e054e54..4ecf6a9 100644
+--- a/1.cc
++++ b/1_.cc
+@@ -3 +3 @@ int main() {
+-    std::cout << "Hello, World!" << std::endl;
++    std::cout << "Hi, World!" << std::endl;

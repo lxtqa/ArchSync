@@ -8,7 +8,8 @@ ENV TZ=GMT
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends openjdk-17-jdk wget git gdebi-core \
 	build-essential ocaml libnum-ocaml-dev python3-pip python3-dev \
-	tzdata ca-certificates p11-kit
+	ca-certificates
+
 
 # Set locale
 ENV LANG=C.UTF-8
@@ -17,7 +18,7 @@ ENV LANG=C.UTF-8
 RUN wget https://github.com/srcML/srcML/releases/download/v1.0.0/srcml_1.0.0-1_ubuntu20.04.deb \
 	&& gdebi srcml_1.0.0-1_ubuntu20.04.deb -n
 
-RUN pip3 install pandas plotnine scipy jupyter fuzzywuzzy
+RUN pip3 install fuzzywuzzy python-Levenshtein
 
 # Install gumtree
 COPY gumtree /opt/gumtree
@@ -33,4 +34,4 @@ RUN mkdir -p /diff
 VOLUME /diff
 EXPOSE 4567
 
-CMD ["python3", "block_result.py"]
+CMD ["python3", "gen_result.py"]

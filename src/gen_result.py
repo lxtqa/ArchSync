@@ -1,11 +1,13 @@
 from utils.ast_utils import *
+from utils.arch_utils import *
+from utils.patch_utils import *
 import sys
 import subprocess
 import tempfile
 from fuzzywuzzy import process,fuzz
 import xml.etree.ElementTree as ET
 import copy
-
+import argparse
 
 def modify_comma(xml_node):
     if xml_node.tag.endswith("parameter_list") or xml_node.tag.endswith("member_init_list") or xml_node.tag.endswith("super_list") or xml_node.tag.endswith("argument_list"):
@@ -350,3 +352,48 @@ def gen_result(file_string1,
 
                 return subprocess.run(["srcml",xmlfile2_.name], capture_output=True,text = True).stdout
 
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='命令行参数处理程序')
+
+    # 添加必选项输入文件目录
+    parser.add_argument('input_directory1', type=str, help='输入文件1')
+    parser.add_argument('input_directory2', type=str, help='输入文件2')
+    parser.add_argument('input_directory1_', type=str, help='输入文件1_')
+
+    # 添加可选项输出文件目录和其他选项
+    # parser.add_argument('-d', '--use_docker', action='store_true', help='使用Docker')
+    parser.add_argument('-o', '--output_directory', type=str, help='指定输出文件')
+    parser.add_argument('-m', '--matcher_id', type=str, default='gumtree-simple', help='指定MATCHER_ID, 默认为gumtree')
+    parser.add_argument('-g', '--tree_generator_id', type=str, default='cpp-srcml', help='指定TREE_GENERATOR_ID, 默认为cpp-srcml')
+
+    # 解析命令行参数
+    args = parser.parse_args()
+
+    # 根据参数执行相应操作
+    # if args.use_docker:
+    #     print('使用Docker')
+        # 在这里执行使用Docker的相关操作
+
+
+    # 输出必选项输入文件目录
+    print('输入文件1:', args.input_directory1)
+    print('输入文件2:', args.input_directory2)
+    print('输入文件1_:', args.input_directory1)
+    # use_docker = args.use_docker
+    MATCHER_ID = args.matcher_id
+    TREE_GENERATOR_ID=args.tree_generator_id
+    # try:
+    cfile1 = open("/diff/"+args.input_directory1).read()
+    cfile2 = open("/diff/"+args.input_directory2).read()
+    cfile1_ = open("/diff/"+args.input_directory1_).read()
+    # except:
+    #     print("Error: 输入文件不存在。请检查路径是否正确。")
+    #     exit(1)
+    modify_hex(cfile1)
+    modify_hex(cfile2)
+    if args.output_directory:
+        with open("/diff/" + args.output_directory, "w") as f:
+            f.write(gen_result(file_string1=cfile1,file_string2=cfile2,file_string1_=cfile1_,mapping_dic ={},use_docker=False,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID))
+    else:
+        print(gen_result(file_string1=cfile1,file_string2=cfile2,file_string1_=cfile1_,mapping_dic ={},use_docker=False,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID))
