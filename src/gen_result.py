@@ -381,5 +381,6 @@ if __name__ == "__main__":
     if args.output_file:
         with open("/diff/" + args.output_file, "w") as f:
             f.write(gen_result(file_string1=cfile1,file_string2=cfile2,file_string1_=cfile1_,mapping_dic ={},use_docker=False,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID))
+            print(f"Output written to {args.output_file}")
     else:
         print(gen_result(file_string1=cfile1,file_string2=cfile2,file_string1_=cfile1_,mapping_dic ={},use_docker=False,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID))
