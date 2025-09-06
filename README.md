@@ -19,12 +19,12 @@ docker build -t archsync .
 Run the following command in the root directory of this project.
 
 ```bash
-docker run --rm -v ./test:/diff archsync python3 gen_result.py 1.cc 2.cc 1_.cc -o 2_.cc
+docker run --rm -v ./test:/diff archsync python3 gen_result.py old_loong.cc old_riscv.cc new_loong.cc -o result.cc
 ```
 
 or
 
 ```bash
-docker run --rm -v ./test:/diff archsync python3 gen_result.py 1.cc 2.cc 1_.cc
+docker run --rm -v ./test:/diff archsync python3 gen_result.py old_loong.cc old_riscv.cc new_loong.cc
 ```
 
