@@ -187,7 +187,7 @@ def main():
             print()
             os.chdir("..")
 
-            print("准确率: {}/{} = {}".format(succeed_tasks,total_tasks,succeed_tasks/total_tasks))
-            print("生成结果耗时: {}s".format(int(time()-start_time)))
+            print("Accuracy: {}/{} = {}".format(succeed_tasks,total_tasks,succeed_tasks/total_tasks))
+            print("Total Time Cost: {}s".format(int(time()-start_time)))
 if __name__ == "__main__":
     main()
