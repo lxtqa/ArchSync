@@ -209,3 +209,6 @@ __marimo__/
 
 # Projects
 v8/
+
+# API
+src/api.py

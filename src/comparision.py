@@ -3,12 +3,19 @@ import re
 from utils.arch_utils import *
 from utils.ast_utils import *
 from utils.patch_utils import *
-from block_result import block_result
 import json
 import tempfile
 import concurrent.futures
 from time import time
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from openai import OpenAI
+from typing import List, Optional, Dict, Any
+from api import *
+import random
+from tqdm import tqdm
 
+client = OpenAI(api_key=API_TOKEN, base_url=API_BASE)
 
 
 def construct_mapping_dic(matches):
@@ -53,6 +60,17 @@ def construct_matches(file1,file2):
 
 
 
+def chat(
+    model: str,
+    messages: List[Dict[str, str]],
+) -> Any:
+    payload: Dict[str, Any] = {
+        "model": model,
+        "messages": messages,
+        "temperature": 0,
+    }
+
+    return client.chat.completions.create(**payload)
 
 
 def remove_cpp_comments(file_content):
@@ -63,31 +81,43 @@ def remove_cpp_comments(file_content):
 def successfully_generate(item1,item2,mapping_dic,r,i,j):
     if item1 == [] or item2 == [] or item1 == item2:
         return None
-    try:
-        file1,patch1 = item1
-        file2,patch2 = item2
+    # try:
+    file1,patch1 = item1
+    file2,patch2 = item2
 
-        modify_hex(file1)
-        modify_hex(file2)
+    modify_hex(file1)
+    modify_hex(file2)
 
-        with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cc') as cfile2, \
-            tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.patch') as patchfile2:
-                cfile2.write(file2)
-                cfile2.flush()
-                patchfile2.write("\n".join(patch2["patch"])+"\n")
-                patchfile2.flush()
-                output22_ = subprocess.run(["patch",cfile2.name,"-i",patchfile2.name,"--output=-"],capture_output=True,text = True)
-                file2_string_std = output22_.stdout
-        use_docker = False
-        file2_string = block_result(file1,patch1,file2,use_docker=use_docker,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID,mapping_dic = mapping_dic)
-        clean_file2_string_std = remove_whitespace(remove_cpp_comments(format(file2_string_std)))
-        clean_file2_string = remove_whitespace(remove_cpp_comments(format(file2_string)))
-        if clean_file2_string_std == clean_file2_string:
-            return True
-        else:
-            return False
-    except:
+    with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cc') as cfile2, \
+        tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.patch') as patchfile2:
+            cfile2.write(file2)
+            cfile2.flush()
+            patchfile2.write("\n".join(patch2["patch"])+"\n")
+            patchfile2.flush()
+            output22_ = subprocess.run(["patch",cfile2.name,"-i",patchfile2.name,"--output=-"],capture_output=True,text = True)
+            file2_string_std = output22_.stdout
+    prompt = [{
+                "role": "user",
+                "content": "Now you are an expert software engineer. You are given a code in source architecture, its patch and a code in destination architecture. \
+                            Your task is to generate the corresponding modified code in destination architecture according to the patch.\
+                            Please only output the modified code without any explanation or additional text.\
+                            Source code:{}\
+                            Patch:{}\
+                            Destination code:{}\
+                            ".format(file1, "\n".join(patch1["patch"]), file2)
+                }]
+    result = chat("deepseek-chat",prompt)
+    if result:
         return False
+    file2_string = result.choices[0].message.content
+    clean_file2_string_std = remove_whitespace(remove_cpp_comments(format(file2_string_std)))
+    clean_file2_string = remove_whitespace(remove_cpp_comments(format(file2_string)))
+    if clean_file2_string_std == clean_file2_string:
+        return True
+    else:
+        return False
+    # except:
+    #     return False
 
 
 
@@ -114,25 +144,24 @@ def main():
             total_tasks = 0
             succeed_tasks = 0
             start_time = time()
-            for t,file_type in enumerate(type_map.keys()):
+            ctime = time()
+            cases = []
+            for t,file_type in tqdm(enumerate(type_map.keys())):
                 mapping_dics = [[{} for _ in range(len(arch_dic))] for _ in range(len(arch_dic))]
                 contents = ["" for _ in range(len(arch_dic))]
+
+
 
                 for files in type_map[file_type]:
                     files = files[0:4] + files[5:]
                     for r,file in enumerate(files):
                         if file != {} and contents[r] == "":
                             with open(file["file"],"r") as f:
-                                contents[r] = modify_hex(format(f.read(),".."))
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                    future_to_task = {executor.submit(construct_matches, contents[i], contents[2]): (i, 2)
-                                        for i in range(len(contents))}
-                    for future in concurrent.futures.as_completed(future_to_task):
-                        i,j = future_to_task[future]
-                        try:
-                            mapping_dics[i][j] = construct_mapping_dic(future.result())
-                        except Exception as e:
-                            pass
+                                # contents[r] = modify_hex(format(f.read(),".."))
+                                contents[r] = format(f.read(),"..")
+
+                print("time cost1: {}s".format(int(time()-ctime)))
+                ctime = time()
 
                 items = []
                 for r,files in enumerate(type_map[file_type]):
@@ -143,35 +172,45 @@ def main():
                             item.append([])
                             continue
                         with open(file["file"],"r") as f:
+                            # content = format(f.read(),"..")
+                            # if content != contents[k]:
+                            #     a = 0
                             patch = {"header":file["header"],"patch":file["patch"]}
                             item.append([contents[k],patch])
                     items.append(item)
-                results = [[0 for _ in range(len(arch_dic))] for _ in range(len(items))]
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                    future_to_task = {executor.submit(successfully_generate, items[r][i], items[r][2],mapping_dics[i][2],r+len_item,i,2): (r, i)
-                                    for r in range(len(items))
-                                    for i in range(len(arch_dic))
-                                    }
-                    for future in concurrent.futures.as_completed(future_to_task):
-                        r,i = future_to_task[future]
-                        succeed = future.result()
-                        if succeed == True:
-                            results[r][i] =  1
-                            succeed_tasks += 1
-                            total_tasks += 1
-                        elif succeed == False:
-                            results[r][i] =  -1
-                            total_tasks += 1
-                        else:
-                            results[r][i] = 0
-                vresult.extend(results)
+                print("time cost2: {}s".format(int(time()-ctime)))
+                ctime = time()
+                for r in range(len(items)):
+                    for i in range(len(arch_dic)):
+                        item1 = items[r][i]
+                        item2 = items[r][2]
+                        if item1 == [] or item2 == [] or item1 == item2:
+                            continue
+                        cases.append( [items[r][i], items[r][2],mapping_dics[i][2],r+len_item,i,2])
                 len_item = len_item + len(items)
-
+                print("time cost3: {}s".format(int(time()-ctime)))
+                ctime = time()
+            random.seed(0)
+            sampled_cases = random.sample(cases, 10)
+            with ThreadPoolExecutor(max_workers=8) as executor:
+                future_to_case = {executor.submit(successfully_generate, case[0], case[1], case[2], case[3], case[4], case[5]): case for case in sampled_cases }
+                for future in as_completed(future_to_case):
+                    total_tasks = total_tasks + 1
+                    try:
+                        result = future.result()
+                        if result:
+                            succeed_tasks = succeed_tasks + 1
+                    except Exception as e:
+                        print("Generated an exception: %s" % (e,))
             print("")
             os.system("git -c advice.detachedHead=false checkout main > /dev/null 2>&1")
             print()
             os.chdir("..")
+
             print("Accuracy: {}/{} = {}".format(succeed_tasks,total_tasks,succeed_tasks/total_tasks))
             print("Total Time Cost: {}s".format(int(time()-start_time)))
 if __name__ == "__main__":
     main()
+
+
+
