@@ -148,12 +148,12 @@ def main():
                     items.append(item)
                 results = [[0 for _ in range(len(arch_dic))] for _ in range(len(items))]
                 with concurrent.futures.ThreadPoolExecutor() as executor:
-                    future_to_task = {executor.submit(successfully_generate, items[r][i], items[r][2],mapping_dics[i][2],r+len_item,i,2): (r, i, 2)
+                    future_to_task = {executor.submit(successfully_generate, items[r][i], items[r][2],mapping_dics[i][2],r+len_item,i,2): (r, i)
                                     for r in range(len(items))
                                     for i in range(len(arch_dic))
                                     }
                     for future in concurrent.futures.as_completed(future_to_task):
-                        r,i,j = future_to_task[future]
+                        r,i = future_to_task[future]
                         succeed = future.result()
                         if succeed == True:
                             results[r][i] =  1
@@ -171,7 +171,6 @@ def main():
             os.system("git -c advice.detachedHead=false checkout main > /dev/null 2>&1")
             print()
             os.chdir("..")
-            print(vresult)
             print("Accuracy: {}/{} = {}".format(succeed_tasks,total_tasks,succeed_tasks/total_tasks))
             print("Total Time Cost: {}s".format(int(time()-start_time)))
 if __name__ == "__main__":
