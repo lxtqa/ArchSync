@@ -4,13 +4,10 @@ from utils.arch_utils import *
 from utils.ast_utils import *
 from utils.patch_utils import *
 from block_result import block_result
-from extract_block import extract_block
 import json
 import tempfile
 import concurrent.futures
 from time import time
-from gen_result import gen_result
-import copy
 
 
 
@@ -63,19 +60,6 @@ def remove_cpp_comments(file_content):
     cleaned_content = re.sub(pattern, '', file_content, flags=re.DOTALL | re.MULTILINE)
     return cleaned_content
 
-def file_result(file1,patch1,file2,use_docker,MATCHER_ID,TREE_GENERATOR_ID,mapping_dic):
-    patch1 = copy.deepcopy(patch1)
-    with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cc') as cfile1, \
-        tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.patch') as patchfile1:
-            cfile1.write(file1)
-            cfile1.flush()
-            patchfile1.write("\n".join(patch1["patch"])+"\n")
-            patchfile1.flush()
-            output11_ = subprocess.run(["patch",cfile1.name,patchfile1.name,"--output=-"],capture_output=True,text = True)
-            file1_string_std = output11_.stdout
-    return gen_result(file1,file2,file1_string_std,mapping_dic=mapping_dic,use_docker=use_docker,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID)
-
-
 def successfully_generate(item1,item2,mapping_dic,r,i,j):
     if item1 == [] or item2 == [] or item1 == item2:
         return None
@@ -92,7 +76,7 @@ def successfully_generate(item1,item2,mapping_dic,r,i,j):
                 cfile2.flush()
                 patchfile2.write("\n".join(patch2["patch"])+"\n")
                 patchfile2.flush()
-                output22_ = subprocess.run(["patch",cfile2.name,patchfile2.name,"--output=-"],capture_output=True,text = True)
+                output22_ = subprocess.run(["patch",cfile2.name,"-i",patchfile2.name,"--output=-"],capture_output=True,text = True)
                 file2_string_std = output22_.stdout
         use_docker = False
         file2_string = block_result(file1,patch1,file2,use_docker=use_docker,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID,mapping_dic = mapping_dic)
@@ -164,7 +148,7 @@ def main():
                     items.append(item)
                 results = [[0 for _ in range(len(arch_dic))] for _ in range(len(items))]
                 with concurrent.futures.ThreadPoolExecutor() as executor:
-                    future_to_task = {executor.submit(successfully_generate, items[r][i], items[r][2],mapping_dics[i][2],r+len_item,i,j ): (r, i, 2)
+                    future_to_task = {executor.submit(successfully_generate, items[r][i], items[r][2],mapping_dics[i][2],r+len_item,i,2): (r, i, 2)
                                     for r in range(len(items))
                                     for i in range(len(arch_dic))
                                     }
@@ -182,11 +166,12 @@ def main():
                             results[r][i] = 0
                 vresult.extend(results)
                 len_item = len_item + len(items)
+
             print("")
             os.system("git -c advice.detachedHead=false checkout main > /dev/null 2>&1")
             print()
             os.chdir("..")
-
+            print(vresult)
             print("Accuracy: {}/{} = {}".format(succeed_tasks,total_tasks,succeed_tasks/total_tasks))
             print("Total Time Cost: {}s".format(int(time()-start_time)))
 if __name__ == "__main__":

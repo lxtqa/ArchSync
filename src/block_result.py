@@ -107,7 +107,7 @@ def block_result(cfile1,
             file1.flush()
             patchfile1.write("\n".join(patch["patch"])+"\n")
             patchfile1.flush()
-            output11_ = subprocess.run(["patch",file1.name,patchfile1.name,"--output=-"],
+            output11_ = subprocess.run(["patch",file1.name,"-i",patchfile1.name,"--output=-"],
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE)
             file_string1_ = output11_.stdout.decode()
@@ -126,7 +126,7 @@ def block_result(cfile1,
             file1.flush()
             patchfile1.write("\n".join(patch["patch"])+"\n")
             patchfile1.flush()
-            output11_ = subprocess.run(["patch",file1.name,patchfile1.name,"--output=-"],
+            output11_ = subprocess.run(["patch",file1.name,"-i",patchfile1.name,"--output=-"],
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE)
             file_string1_ = output11_.stdout.decode()
