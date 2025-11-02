@@ -13,7 +13,7 @@ from openai import OpenAI
 from typing import List, Optional, Dict, Any
 from api import *
 import random
-from tqdm import tqdm
+
 
 client = OpenAI(api_key=API_TOKEN, base_url=API_BASE)
 
@@ -100,19 +100,18 @@ def successfully_generate(item1,item2,mapping_dic,r,i,j):
                 "role": "user",
                 "content": "Now you are an expert software engineer. You are given a code in source architecture, its patch and a code in destination architecture. \
                             Your task is to generate the corresponding modified code in destination architecture according to the patch.\
-                            Please only output the modified code without any explanation or additional text.\
+                            Please only output the modified code without any explanation or additional text including .\
                             Source code:{}\
                             Patch:{}\
                             Destination code:{}\
                             ".format(file1, "\n".join(patch1["patch"]), file2)
                 }]
-    result = chat("deepseek-chat",prompt)
-    if result:
-        return False
+    # result = chat("deepseek-chat",prompt)
+    result = chat("deepseek-reasoner",prompt)
     file2_string = result.choices[0].message.content
     clean_file2_string_std = remove_whitespace(remove_cpp_comments(format(file2_string_std)))
     clean_file2_string = remove_whitespace(remove_cpp_comments(format(file2_string)))
-    if clean_file2_string_std == clean_file2_string:
+    if clean_file2_string_std in clean_file2_string:
         return True
     else:
         return False
@@ -144,9 +143,8 @@ def main():
             total_tasks = 0
             succeed_tasks = 0
             start_time = time()
-            ctime = time()
             cases = []
-            for t,file_type in tqdm(enumerate(type_map.keys())):
+            for t,file_type in enumerate(type_map.keys()):
                 mapping_dics = [[{} for _ in range(len(arch_dic))] for _ in range(len(arch_dic))]
                 contents = ["" for _ in range(len(arch_dic))]
 
@@ -157,11 +155,9 @@ def main():
                     for r,file in enumerate(files):
                         if file != {} and contents[r] == "":
                             with open(file["file"],"r") as f:
-                                # contents[r] = modify_hex(format(f.read(),".."))
-                                contents[r] = format(f.read(),"..")
+                                contents[r] = modify_hex(format(f.read(),".."))
 
-                print("time cost1: {}s".format(int(time()-ctime)))
-                ctime = time()
+
 
                 items = []
                 for r,files in enumerate(type_map[file_type]):
@@ -172,14 +168,10 @@ def main():
                             item.append([])
                             continue
                         with open(file["file"],"r") as f:
-                            # content = format(f.read(),"..")
-                            # if content != contents[k]:
-                            #     a = 0
                             patch = {"header":file["header"],"patch":file["patch"]}
                             item.append([contents[k],patch])
                     items.append(item)
-                print("time cost2: {}s".format(int(time()-ctime)))
-                ctime = time()
+
                 for r in range(len(items)):
                     for i in range(len(arch_dic)):
                         item1 = items[r][i]
@@ -188,11 +180,10 @@ def main():
                             continue
                         cases.append( [items[r][i], items[r][2],mapping_dics[i][2],r+len_item,i,2])
                 len_item = len_item + len(items)
-                print("time cost3: {}s".format(int(time()-ctime)))
-                ctime = time()
+
             random.seed(0)
-            sampled_cases = random.sample(cases, 10)
-            with ThreadPoolExecutor(max_workers=8) as executor:
+            sampled_cases = random.sample(cases, 100)
+            with ThreadPoolExecutor(max_workers=100) as executor:
                 future_to_case = {executor.submit(successfully_generate, case[0], case[1], case[2], case[3], case[4], case[5]): case for case in sampled_cases }
                 for future in as_completed(future_to_case):
                     total_tasks = total_tasks + 1
