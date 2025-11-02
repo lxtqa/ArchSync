@@ -242,22 +242,22 @@ def main():
                         print("Generated an exception: %s" % (e,))
             print("Accuracy for tool: {}/{} = {}".format(succeed_tasks,total_tasks,succeed_tasks/total_tasks))
 
-            # with ThreadPoolExecutor(max_workers=100) as executor:
-            #     future_to_case = {executor.submit(LLM_generate, case[0], case[1], case[2], case[3], case[4], case[5]): case for case in sampled_cases }
-            #     for future in as_completed(future_to_case):
-            #         total_tasks = total_tasks + 1
-            #         try:
-            #             result = future.result()
-            #             if result:
-            #                 succeed_tasks = succeed_tasks + 1
-            #         except Exception as e:
-            #             print("Generated an exception: %s" % (e,))
-            # print("")
-            # os.system("git -c advice.detachedHead=false checkout main > /dev/null 2>&1")
-            # print()
-            # os.chdir("..")
+            with ThreadPoolExecutor(max_workers=100) as executor:
+                future_to_case = {executor.submit(LLM_generate, case[0], case[1], case[2], case[3], case[4], case[5]): case for case in sampled_cases }
+                for future in as_completed(future_to_case):
+                    total_tasks = total_tasks + 1
+                    try:
+                        result = future.result()
+                        if result:
+                            succeed_tasks = succeed_tasks + 1
+                    except Exception as e:
+                        print("Generated an exception: %s" % (e,))
+            print("")
+            os.system("git -c advice.detachedHead=false checkout main > /dev/null 2>&1")
+            print()
+            os.chdir("..")
 
-            # print("Accuracy for LLM: {}/{} = {}".format(succeed_tasks,total_tasks,succeed_tasks/total_tasks))
+            print("Accuracy for LLM: {}/{} = {}".format(succeed_tasks,total_tasks,succeed_tasks/total_tasks))
 if __name__ == "__main__":
     main()
 
