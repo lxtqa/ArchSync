@@ -1,0 +1,24 @@
+services:
+  archsync:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: archsync
+    ports:
+      - "8012:8012"
+    restart: unless-stopped
+    volumes:
+      - ./diff:/diff
+
+  archsync_proxy:
+    build:
+      context: .
+      dockerfile: mcp/Dockerfile
+    container_name: archsync_proxy
+    ports:
+      - "8013:8013"
+    restart: unless-stopped
+    environment:
+      - BACKEND=http://archsync:8012
+    volumes:
+      - ./diff:/diff

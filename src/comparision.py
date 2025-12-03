@@ -117,7 +117,7 @@ def LLM_generate(item1,item2,mapping_dic,r,i,j):
             return False
     except:
         return False
-    
+
 
 def tool_generate(item1,item2,mapping_dic,r,i,j):
     if item1 == [] or item2 == [] or item1 == item2:
@@ -241,7 +241,8 @@ def main():
                     except Exception as e:
                         print("Generated an exception: %s" % (e,))
             print("Accuracy for tool: {}/{} = {}".format(succeed_tasks,total_tasks,succeed_tasks/total_tasks))
-
+            succeed_tasks = 0
+            total_tasks = 0
             with ThreadPoolExecutor(max_workers=100) as executor:
                 future_to_case = {executor.submit(LLM_generate, case[0], case[1], case[2], case[3], case[4], case[5]): case for case in sampled_cases }
                 for future in as_completed(future_to_case):

@@ -343,44 +343,96 @@ def gen_result(file_string1,
                 return subprocess.run(["srcml",xmlfile2_.name], capture_output=True,text = True).stdout
 
 
+import argparse
+import os
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate result from three input files.')
 
+    # --- 改为最佳实践：全部使用命名参数 ---
+    parser.add_argument(
+        '--old-other-arch',
+        required=True,
+        type=str,
+        help="原始架构源文件 (old_other_arch)"
+    )
 
-    parser.add_argument('input_file1', type=str, help="Original file 1 (source file before modification).")
-    parser.add_argument('input_file2', type=str, help="File 2 which is the mirror of file 1.")
-    parser.add_argument('input_file1_', type=str, help="Modified version of file 1, representing the updated state after changes.")
+    parser.add_argument(
+        '--old-riscv',
+        required=True,
+        type=str,
+        help="旧版 RISC-V 文件 (old_riscv)"
+    )
 
+    parser.add_argument(
+        '--new-other-arch',
+        required=True,
+        type=str,
+        help="修改后的架构源文件 (new_other_arch)"
+    )
 
+    parser.add_argument(
+        '-o', '--output',
+        type=str,
+        required=False,
+        help="输出文件名"
+    )
 
+    parser.add_argument(
+        '-m', '--matcher_id',
+        type=str,
+        default='gumtree-simple',
+        help='default: gumtree-simple'
+    )
 
-
-    parser.add_argument('-o', '--output_file', type=str)
-    parser.add_argument('-m', '--matcher_id', type=str, default='gumtree-simple', help='default: gumtree-simple')
-    parser.add_argument('-g', '--tree_generator_id', type=str, default='cpp-srcml', help='default: cpp-srcml')
-
+    parser.add_argument(
+        '-g', '--tree_generator_id',
+        type=str,
+        default='cpp-srcml',
+        help='default: cpp-srcml'
+    )
 
     args = parser.parse_args()
 
+    # --- 输入文件路径 ---
+    file1 = "/diff/" + args.old_other_arch
+    file2 = "/diff/" + args.old_riscv
+    file1_ = "/diff/" + args.new_other_arch
 
+    print("old_other_arch:", file1)
+    print("old_riscv:", file2)
+    print("new_other_arch:", file1_)
 
-    print('input file1:', "/diff/"+args.input_file1)
-    print('input file2:', "/diff/"+args.input_file2)
-    print('input file1_:', "/diff/"+args.input_file1)
     MATCHER_ID = args.matcher_id
-    TREE_GENERATOR_ID=args.tree_generator_id
+    TREE_GENERATOR_ID = args.tree_generator_id
+
+    # --- 读取文件 ---
     try:
-        cfile1 = open("/diff/"+args.input_file1).read()
-        cfile2 = open("/diff/"+args.input_file2).read()
-        cfile1_ = open("/diff/"+args.input_file1_).read()
+        cfile1 = open(file1).read()
+        cfile2 = open(file2).read()
+        cfile1_ = open(file1_).read()
     except:
         print("Error: Cannot open input files.")
         exit(1)
+
     modify_hex(cfile1)
     modify_hex(cfile2)
-    if args.output_file:
-        with open("/diff/" + args.output_file, "w") as f:
-            f.write(gen_result(file_string1=cfile1,file_string2=cfile2,file_string1_=cfile1_,mapping_dic ={},use_docker=False,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID))
-            print(f"Output written to {args.output_file}")
+
+    # --- 输出 ---
+    result = gen_result(
+        file_string1=cfile1,
+        file_string2=cfile2,
+        file_string1_=cfile1_,
+        mapping_dic={},
+        use_docker=False,
+        MATCHER_ID=MATCHER_ID,
+        TREE_GENERATOR_ID=TREE_GENERATOR_ID
+    )
+
+    if args.output:
+        output_path = "/diff/" + args.output
+        with open(output_path, "w") as f:
+            f.write(result)
+        print(f"Output written to {output_path}")
     else:
-        print(gen_result(file_string1=cfile1,file_string2=cfile2,file_string1_=cfile1_,mapping_dic ={},use_docker=False,MATCHER_ID=MATCHER_ID,TREE_GENERATOR_ID=TREE_GENERATOR_ID))
+        print(result)
