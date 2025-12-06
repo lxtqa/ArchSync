@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from fastmcp import FastMCP
+from fastmcp.utilities.types import Image, Audio, File
 from pydantic import Field
 from typing import Dict, Any, Optional
 import requests
@@ -10,6 +11,8 @@ import warnings
 import os
 import shutil
 import subprocess
+
+
 
 def clone_or_update_repo(repo_url, branch="main", clone_dir="/tmp/mcp_repo"):
     """
@@ -126,7 +129,6 @@ def generate_riscv_code(
     try:
         
         # 克隆整个仓库
-        local_repo = clone_or_update_repo(gitUrl, branch)
         repo_info = clone_or_update_repo(gitUrl, branch)
 
         if not repo_info["success"]:
@@ -139,11 +141,7 @@ def generate_riscv_code(
         cfile1_ = get_cfile_from_repo(local_repo, new_other_arch)
 
         
-    except:
-        print("Error: Cannot get input files.")
-        exit(1)
-    print("Input files retrieved successfully.")
-    try:
+        print("Input files retrieved successfully.")
         result = gen_result(
                 file_string1=cfile1,
                 file_string2=cfile2,
@@ -155,20 +153,18 @@ def generate_riscv_code(
             )
         print("RISC-V code generated successfully.")
         # ---- 写入文件到 /diff ----
-        output_path = f"/diff/{new_riscv}"
+        download_dir = Path("download")
+        download_dir.mkdir(exist_ok=True)
+        output_path = download_dir / new_riscv
 
         with open(output_path, "w") as f:
             f.write(result)
 
-        # ---- 生成可供下载的 URL ----
-        # download_url = f"http://localhost:8013/download/{new_riscv}"
-        download_url = f"http://133.133.135.53:8013/download/{new_riscv}"
-
         return {
             "success": True,
             "filename": new_riscv,
-            "download_url": download_url,
-            "message": "RISC-V 代码已生成，可通过 download_url 下载完整文件"
+            "file": File(path=output_path).to_resource_content(),
+            "message": "RISC-V 代码已生成"
         }
     except Exception as e:
         return {
