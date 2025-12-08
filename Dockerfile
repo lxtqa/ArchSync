@@ -67,7 +67,7 @@ RUN wget https://github.com/srcML/srcML/releases/download/v1.0.0/srcml_1.0.0-1_u
 # -------------------------------------------------------
 # Python 库
 # -------------------------------------------------------
-RUN python3.11 -m pip install --no-cache-dir fuzzywuzzy python-Levenshtein \
+RUN python3.11 -m pip install --no-cache-dir fuzzywuzzy python-Levenshtein fastapi uvicorn \
     fastmcp requests pydantic
 
 # -------------------------------------------------------
@@ -96,5 +96,6 @@ RUN mkdir -p /diff
 VOLUME /diff
 
 EXPOSE 8013
+EXPOSE 8012
 
 CMD ["python3.11", "archsync_mcp.py"]

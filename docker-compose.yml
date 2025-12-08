@@ -7,11 +7,13 @@ services:
       dockerfile: Dockerfile
     container_name: archsync_proxy
     ports:
+      - "8012:8012"
       - "8013:8013"
     restart: unless-stopped
     environment:
       - MCP_PORT=8013
       - MCP_TRANSPORT=http
+      - SERVER_IP=133.133.135.53
     volumes:
       - ./diff:/diff
 

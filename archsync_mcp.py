@@ -3,6 +3,10 @@ from pathlib import Path
 from fastmcp import FastMCP
 from fastmcp.utilities.types import Image, Audio, File
 from pydantic import Field
+import threading
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+import uvicorn
 from typing import Dict, Any, Optional
 import requests
 import subprocess
@@ -12,6 +16,17 @@ import os
 import shutil
 import subprocess
 
+# ---------------- FastAPI File Server ----------------
+
+DOWNLOAD_DIR = "download"
+fastapi_app = FastAPI()
+
+@fastapi_app.get("/download/{filename}")
+async def download_file(filename: str):
+    file_path = os.path.join(DOWNLOAD_DIR, filename)
+    if not os.path.exists(file_path):
+        return {"error": "File not found"}
+    return FileResponse(path=file_path, filename=filename)
 
 
 def clone_or_update_repo(repo_url, branch="main", clone_dir="/tmp/mcp_repo"):
@@ -153,28 +168,39 @@ def generate_riscv_code(
             )
         print("RISC-V code generated successfully.")
         # ---- 写入文件到 /diff ----
-        download_dir = Path("download")
+        download_dir = Path(DOWNLOAD_DIR)
         download_dir.mkdir(exist_ok=True)
         output_path = download_dir / new_riscv
+
 
         with open(output_path, "w") as f:
             f.write(result)
 
+        download_url = f"http://{os.getenv('SERVER_IP', 'localhost')}:8012/download/{new_riscv}"
+
         return {
             "success": True,
             "filename": new_riscv,
-            "file": File(path=output_path).to_resource_content(),
+            "url": download_url,          # ⭐ 加上这个
             "message": "RISC-V 代码已生成"
         }
+
     except Exception as e:
         return {
             "success": False,
             "error": str(e)
         }
 
+def start_fastapi():
+    uvicorn.run(fastapi_app, host="0.0.0.0", port=8012)
 
 
 if __name__ == "__main__":
+
+    # 启动 FastAPI 后台线程
+    threading.Thread(target=start_fastapi, daemon=True).start()
+
+    # 启动 MCP
     MCP_PORT = int(os.getenv("MCP_PORT", "8013"))
     MCP_TRANSPORT = os.getenv("MCP_TRANSPORT", "http")
 
@@ -182,3 +208,4 @@ if __name__ == "__main__":
         app.run()
     else:
         app.run(transport="http", host="0.0.0.0", port=MCP_PORT)
+
