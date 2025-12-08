@@ -1,32 +1,32 @@
 import os
 from pathlib import Path
 from fastmcp import FastMCP
-from fastmcp.utilities.types import Image, Audio, File
 from pydantic import Field
 import threading
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 import uvicorn
-from typing import Dict, Any, Optional
-import requests
+from typing import Dict, Any
 import subprocess
 from src.gen_result import gen_result
 import warnings
 import os
-import shutil
 import subprocess
+import uuid
+
 
 # ---------------- FastAPI File Server ----------------
 
 DOWNLOAD_DIR = "download"
 fastapi_app = FastAPI()
 
-@fastapi_app.get("/download/{filename}")
-async def download_file(filename: str):
-    file_path = os.path.join(DOWNLOAD_DIR, filename)
+@fastapi_app.get("/download/{user_dir}/{filename}")
+async def download_file(user_dir: str, filename: str):
+    file_path = os.path.join(DOWNLOAD_DIR, user_dir, filename)
     if not os.path.exists(file_path):
         return {"error": "File not found"}
     return FileResponse(path=file_path, filename=filename)
+
 
 
 def clone_or_update_repo(repo_url, branch="main", clone_dir="/tmp/mcp_repo"):
@@ -167,16 +167,19 @@ def generate_riscv_code(
                 TREE_GENERATOR_ID='cpp-srcml'
             )
         print("RISC-V code generated successfully.")
-        # ---- 写入文件到 /diff ----
-        download_dir = Path(DOWNLOAD_DIR)
-        download_dir.mkdir(exist_ok=True)
+        # 如果没有 user_id，则生成随机目录
+        user_dir = str(uuid.uuid4())
+        download_dir = Path(DOWNLOAD_DIR) / user_dir
+        download_dir.mkdir(parents=True, exist_ok=True)
+
         output_path = download_dir / new_riscv
 
 
         with open(output_path, "w") as f:
             f.write(result)
 
-        download_url = f"http://{os.getenv('SERVER_IP', 'localhost')}:8012/download/{new_riscv}"
+        download_url = f"http://{os.getenv('SERVER_IP', 'localhost')}:8012/download/{user_dir}/{new_riscv}"
+
 
         return {
             "success": True,
