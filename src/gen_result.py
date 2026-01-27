@@ -1,12 +1,15 @@
-from utils.ast_utils import *
-from utils.arch_utils import *
-from utils.patch_utils import *
+from src.utils.ast_utils import *
+from src.utils.arch_utils import *
+from src.utils.patch_utils import *
 import sys
 import subprocess
 import tempfile
 from fuzzywuzzy import process,fuzz
 import xml.etree.ElementTree as ET
 import copy
+import argparse
+import requests
+from concurrent.futures import ThreadPoolExecutor
 import argparse
 
 def modify_comma(xml_node):
@@ -258,17 +261,31 @@ def parse_diff(diff,ast1,ast1_,ast2,match_dic11_,match_dic12,mapping_dic):
                 des2.children.insert(0,new_source)
                 return [des2.xml,father2.xml]
 
-
+def construct_mapping_dic(match_dic):
+    mapping_dic = {}
+    for key in match_dic.keys():
+        value = match_dic[key]
+        if key.split(" ")[0] == "name:" and value.split(" ")[0] == "name:":
+            k,v = get_name(key),get_name(value)
+            if k not in mapping_dic.keys():
+                mapping_dic[k] = {v:1}
+            else:
+                if v not in mapping_dic[k].keys():
+                    mapping_dic[k][v] = 1
+                else:
+                    mapping_dic[k][v] = mapping_dic[k][v] + 1
+    return mapping_dic
 
 def gen_result(file_string1,
                 file_string2,
                 file_string1_,
-                mapping_dic,
                 use_docker,
                 MATCHER_ID,
                 TREE_GENERATOR_ID
                 ):
-
+    modify_hex(file_string1)
+    modify_hex(file_string2)
+    modify_hex(file_string1_)
     with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile1, \
         tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile1_, \
         tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile2:
@@ -280,20 +297,30 @@ def gen_result(file_string1,
         cfile2.write(file_string2)
         cfile2.flush()
 
-        ast1, _ = get_ast(cfile1.name,use_docker=use_docker,TREE_GENERATOR_ID=TREE_GENERATOR_ID)
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            f_ast1  = pool.submit(get_ast, cfile1.name,  use_docker=use_docker, TREE_GENERATOR_ID=TREE_GENERATOR_ID)
+            f_ast1_ = pool.submit(get_ast, cfile1_.name, use_docker=use_docker, TREE_GENERATOR_ID=TREE_GENERATOR_ID)
+            f_ast2  = pool.submit(get_ast, cfile2.name,  use_docker=use_docker, TREE_GENERATOR_ID=TREE_GENERATOR_ID)
 
-        ast1_, _  = get_ast(cfile1_.name,use_docker=use_docker,TREE_GENERATOR_ID=TREE_GENERATOR_ID)
+            ast1,  _ = f_ast1.result()
+            ast1_, _ = f_ast1_.result()
+            ast2,  _ = f_ast2.result()
 
-        ast2, _  = get_ast(cfile2.name,use_docker=use_docker,TREE_GENERATOR_ID=TREE_GENERATOR_ID)
 
 
 
-        output11_ = subprocess.run(["gumtree","textdiff",cfile1.name, cfile1_.name,
-                                    "-m",MATCHER_ID,"-g", TREE_GENERATOR_ID],
-                                    capture_output=True,text = True).stdout
-        output12 = subprocess.run(["gumtree","textdiff",cfile1.name, cfile2.name,
-                                    "-m",MATCHER_ID,"-g", TREE_GENERATOR_ID],
-                                    capture_output=True,text = True).stdout
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            f11_ = pool.submit(subprocess.run,
+                ["gumtree","textdiff",cfile1.name, cfile1_.name,"-m",MATCHER_ID,"-g", TREE_GENERATOR_ID],
+                capture_output=True, text=True)
+
+            f12 = pool.submit(subprocess.run,
+                ["gumtree","textmatch",cfile1.name, cfile2.name,"-m",MATCHER_ID,"-g", TREE_GENERATOR_ID],
+                capture_output=True, text=True)
+
+            output11_ = f11_.result().stdout
+            output12  = f12.result().stdout
+
 
         with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as xmlfile1, \
             tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as xmlfile1_, \
@@ -323,6 +350,9 @@ def gen_result(file_string1,
             for match in matches11_:
                 node = re.search(r"(.* \[\d+,\d+\])\n(.* \[\d+,\d+\])","\n".join(match[2:]),re.DOTALL)
                 match_dic11_[node[1]] = node[2]
+
+            mapping_dic = construct_mapping_dic(match_dic12)
+
             changed_nodes = []
             for diff in diffs11_:
                 try:
@@ -343,13 +373,22 @@ def gen_result(file_string1,
                 return subprocess.run(["srcml",xmlfile2_.name], capture_output=True,text = True).stdout
 
 
-import argparse
-import os
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate result from three input files.')
 
-    # --- 改为最佳实践：全部使用命名参数 ---
+    parser.add_argument(
+        '--gitUrl',
+        required=True,
+        type=str,
+        help="git 仓库地址 (gitUrl)"
+    )
+
+    parser.add_argument(
+        '--branch',
+        required=True,
+        type=str,
+        help="分支 (branch)"
+    )
     parser.add_argument(
         '--old-other-arch',
         required=True,
@@ -394,36 +433,44 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # --- 输入文件路径 ---
-    file1 = "/diff/" + args.old_other_arch
-    file2 = "/diff/" + args.old_riscv
-    file1_ = "/diff/" + args.new_other_arch
 
-    print("old_other_arch:", file1)
-    print("old_riscv:", file2)
-    print("new_other_arch:", file1_)
+    print("old_other_arch:", args.old_other_arch)
+    print("old_riscv:", args.old_riscv)
+    print("new_other_arch:", args.new_other_arch)
 
     MATCHER_ID = args.matcher_id
     TREE_GENERATOR_ID = args.tree_generator_id
 
     # --- 读取文件 ---
     try:
-        cfile1 = open(file1).read()
-        cfile2 = open(file2).read()
-        cfile1_ = open(file1_).read()
-    except:
-        print("Error: Cannot open input files.")
-        exit(1)
+        from urllib.parse import urljoin
+        def get_cfile_from_url(base, branch, path):
+            # 构建 raw URL
+            if base.endswith(".git"):
+                base = base[:-4]
+            url = f"{base}/raw/{branch}/{path.lstrip('/')}"
 
-    modify_hex(cfile1)
-    modify_hex(cfile2)
+            response = requests.get(url, timeout=10)
+
+            if response.status_code == 404:
+                raise FileNotFoundError(f"File not found at {url}")
+
+            response.raise_for_status()
+            return response.text
+
+        cfile1 = get_cfile_from_url(args.gitUrl, args.branch, args.old_other_arch)
+        cfile2 = get_cfile_from_url(args.gitUrl, args.branch, args.old_riscv)
+        cfile1_ = get_cfile_from_url(args.gitUrl, args.branch, args.new_other_arch)
+
+    except:
+        print("Error: Cannot get input files.")
+        exit(1)
 
     # --- 输出 ---
     result = gen_result(
         file_string1=cfile1,
         file_string2=cfile2,
         file_string1_=cfile1_,
-        mapping_dic={},
         use_docker=False,
         MATCHER_ID=MATCHER_ID,
         TREE_GENERATOR_ID=TREE_GENERATOR_ID

@@ -1,0 +1,823 @@
+[
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/lib/asm-offsets.c",
+      "patch": "diff --git a/arch/arm/lib/asm-offsets.c b/arch/arm/lib/asm-offsets.c\nindex 9afd8375999..181a8ac4c27 100644\n--- a/arch/arm/lib/asm-offsets.c\n+++ b/arch/arm/lib/asm-offsets.c\n@@ -16,6 +16,7 @@\n  *   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>\n  */\n \n+#include <common.h>\n #include <linux/kbuild.h>\n #include <linux/arm-smccc.h>\n "
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/x86/lib/asm-offsets.c",
+      "patch": "diff --git a/arch/x86/lib/asm-offsets.c b/arch/x86/lib/asm-offsets.c\nindex 7b2905dda56..8df67db65c3 100644\n--- a/arch/x86/lib/asm-offsets.c\n+++ b/arch/x86/lib/asm-offsets.c\n@@ -11,6 +11,7 @@\n  * #defines from the assembly-language output.\n  */\n \n+#include <common.h>\n #include <asm/global_data.h>\n #include <linux/kbuild.h>\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/lib/bdinfo.c",
+      "patch": "diff --git a/arch/arm/lib/bdinfo.c b/arch/arm/lib/bdinfo.c\nindex 7c49462c8eb..b88b01eefdc 100644\n--- a/arch/arm/lib/bdinfo.c\n+++ b/arch/arm/lib/bdinfo.c\n@@ -6,7 +6,7 @@\n  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.\n  */\n \n-#include <config.h>\n+#include <common.h>\n #include <init.h>\n #include <asm/global_data.h>\n #include <asm/mach-types.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/x86/lib/bdinfo.c",
+      "patch": "diff --git a/arch/x86/lib/bdinfo.c b/arch/x86/lib/bdinfo.c\nindex 165e8ab944f..124058442c5 100644\n--- a/arch/x86/lib/bdinfo.c\n+++ b/arch/x86/lib/bdinfo.c\n@@ -5,6 +5,7 @@\n  * Copyright 2021 Google LLC\n  */\n \n+#include <common.h>\n #include <efi.h>\n #include <init.h>\n #include <asm/cpu.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/powerpc/lib/bdinfo.c",
+      "patch": "diff --git a/arch/powerpc/lib/bdinfo.c b/arch/powerpc/lib/bdinfo.c\nindex 6491c210f4e..55dcad5df8e 100644\n--- a/arch/powerpc/lib/bdinfo.c\n+++ b/arch/powerpc/lib/bdinfo.c\n@@ -6,6 +6,7 @@\n  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.\n  */\n \n+#include <common.h>\n #include <init.h>\n #include <asm/global_data.h>\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/lib/bootm.c",
+      "patch": "diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c\nindex 192c120a7d2..f30a483ed8b 100644\n--- a/arch/arm/lib/bootm.c\n+++ b/arch/arm/lib/bootm.c\n@@ -11,6 +11,7 @@\n  * Copyright (C) 2001  Erik Mouw (J.A.K.Mouw@its.tudelft.nl)\n  */\n \n+#include <common.h>\n #include <bootm.h>\n #include <bootstage.h>\n #include <command.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex 2c889bcd33c..050c420e86b 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -7,6 +7,7 @@\n  * Copyright (C) 2001  Erik Mouw (J.A.K.Mouw@its.tudelft.nl)\n  */\n \n+#include <common.h>\n #include <bootm.h>\n #include <bootstage.h>\n #include <command.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/powerpc/lib/bootm.c",
+      "patch": "diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c\nindex f55b5ff8320..75c6bfd2bf8 100644\n--- a/arch/powerpc/lib/bootm.c\n+++ b/arch/powerpc/lib/bootm.c\n@@ -7,7 +7,7 @@\n  */\n \n \n-#include <config.h>\n+#include <common.h>\n #include <bootm.h>\n #include <bootstage.h>\n #include <cpu_func.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/lib/cache.c",
+      "patch": "diff --git a/arch/arm/lib/cache.c b/arch/arm/lib/cache.c\nindex b2ae74a59f1..7a160158671 100644\n--- a/arch/arm/lib/cache.c\n+++ b/arch/arm/lib/cache.c\n@@ -6,7 +6,7 @@\n \n /* for now: just dummy functions to satisfy the linker */\n \n-#include <config.h>\n+#include <common.h>\n #include <cpu_func.h>\n #include <log.h>\n #include <malloc.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/powerpc/lib/cache.c",
+      "patch": "diff --git a/arch/powerpc/lib/cache.c b/arch/powerpc/lib/cache.c\nindex e480b269649..c4c5c2d4513 100644\n--- a/arch/powerpc/lib/cache.c\n+++ b/arch/powerpc/lib/cache.c\n@@ -4,6 +4,7 @@\n  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.\n  */\n \n+#include <common.h>\n #include <cpu_func.h>\n #include <asm/cache.h>\n #include <watchdog.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/lib/cmd_boot.c",
+      "patch": "diff --git a/arch/arm/lib/cmd_boot.c b/arch/arm/lib/cmd_boot.c\nindex 5df5bc305a2..c905ecc4bd9 100644\n--- a/arch/arm/lib/cmd_boot.c\n+++ b/arch/arm/lib/cmd_boot.c\n@@ -17,6 +17,7 @@\n  * Copyright 2015 Konsulko Group, Matt Porter <mporter@konsulko.com>\n  */\n \n+#include <common.h>\n #include <command.h>\n \n /*"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/x86/lib/cmd_boot.c",
+      "patch": "diff --git a/arch/x86/lib/cmd_boot.c b/arch/x86/lib/cmd_boot.c\nindex 0444a5f89d3..4facbe5f32f 100644\n--- a/arch/x86/lib/cmd_boot.c\n+++ b/arch/x86/lib/cmd_boot.c\n@@ -14,6 +14,7 @@\n  * Marius Groeger <mgroeger@sysgo.de>\n  */\n \n+#include <common.h>\n #include <command.h>\n #include <malloc.h>\n #include <asm/global_data.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/lib/interrupts.c",
+      "patch": "diff --git a/arch/arm/lib/interrupts.c b/arch/arm/lib/interrupts.c\nindex 333a5026a46..9961472f69f 100644\n--- a/arch/arm/lib/interrupts.c\n+++ b/arch/arm/lib/interrupts.c\n@@ -18,6 +18,7 @@\n  * Philippe Robin, ARM Ltd. <philippe.robin@arm.com>\n  */\n \n+#include <common.h>\n #include <cpu_func.h>\n #include <efi_loader.h>\n #include <irq_func.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/x86/lib/interrupts.c",
+      "patch": "diff --git a/arch/x86/lib/interrupts.c b/arch/x86/lib/interrupts.c\nindex f96b2bfd70e..ff52959ed28 100644\n--- a/arch/x86/lib/interrupts.c\n+++ b/arch/x86/lib/interrupts.c\n@@ -29,6 +29,7 @@\n  * Daniel Engström\n  */\n \n+#include <common.h>\n #include <command.h>\n #include <irq_func.h>\n #include <asm/interrupt.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/powerpc/lib/interrupts.c",
+      "patch": "diff --git a/arch/powerpc/lib/interrupts.c b/arch/powerpc/lib/interrupts.c\nindex 92b8a0bceac..df312dfa28e 100644\n--- a/arch/powerpc/lib/interrupts.c\n+++ b/arch/powerpc/lib/interrupts.c\n@@ -7,7 +7,7 @@\n  * Gleb Natapov <gnatapov@mrv.com>\n  */\n \n-#include <asm/ppc.h>\n+#include <common.h>\n #include <irq_func.h>\n #include <asm/processor.h>\n #include <watchdog.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/lib/spl.c",
+      "patch": "diff --git a/arch/arm/lib/spl.c b/arch/arm/lib/spl.c\nindex c43a63f1819..b13897495da 100644\n--- a/arch/arm/lib/spl.c\n+++ b/arch/arm/lib/spl.c\n@@ -7,6 +7,7 @@\n  * Tom Rini <trini@ti.com>\n  */\n \n+#include <common.h>\n #include <config.h>\n #include <init.h>\n #include <log.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/x86/lib/spl.c",
+      "patch": "diff --git a/arch/x86/lib/spl.c b/arch/x86/lib/spl.c\nindex f761fbc8bc3..c15f11f8cdf 100644\n--- a/arch/x86/lib/spl.c\n+++ b/arch/x86/lib/spl.c\n@@ -5,6 +5,7 @@\n \n #define LOG_CATEGORY\tLOGC_BOOT\n \n+#include <common.h>\n #include <cpu_func.h>\n #include <debug_uart.h>\n #include <dm.h>\n@@ -28,7 +29,6 @@\n #include <asm/processor.h>\n #include <asm/qemu.h>\n #include <asm/spl.h>\n-#include <asm/u-boot-x86.h>\n #include <asm-generic/sections.h>\n \n DECLARE_GLOBAL_DATA_PTR;"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/powerpc/lib/spl.c",
+      "patch": "diff --git a/arch/powerpc/lib/spl.c b/arch/powerpc/lib/spl.c\nindex 3a24cbfff3b..b638ea7be61 100644\n--- a/arch/powerpc/lib/spl.c\n+++ b/arch/powerpc/lib/spl.c\n@@ -2,6 +2,7 @@\n /*\n  * Copyright 2012 Stefan Roese <sr@denx.de>\n  */\n+#include <common.h>\n #include <config.h>\n #include <log.h>\n #include <spl.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/lib/stack.c",
+      "patch": "diff --git a/arch/arm/lib/stack.c b/arch/arm/lib/stack.c\nindex ea1b937add7..656084c7e51 100644\n--- a/arch/arm/lib/stack.c\n+++ b/arch/arm/lib/stack.c\n@@ -10,6 +10,7 @@\n  * Sysgo Real-Time Solutions, GmbH <www.elinos.com>\n  * Marius Groeger <mgroeger@sysgo.de>\n  */\n+#include <common.h>\n #include <init.h>\n #include <lmb.h>\n #include <asm/global_data.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/powerpc/lib/stack.c",
+      "patch": "diff --git a/arch/powerpc/lib/stack.c b/arch/powerpc/lib/stack.c\nindex afd869e4ac3..2e731aa8701 100644\n--- a/arch/powerpc/lib/stack.c\n+++ b/arch/powerpc/lib/stack.c\n@@ -10,6 +10,7 @@\n  * Sysgo Real-Time Solutions, GmbH <www.elinos.com>\n  * Marius Groeger <mgroeger@sysgo.de>\n  */\n+#include <common.h>\n #include <init.h>\n #include <asm/global_data.h>\n #include <asm/mp.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/lib/zimage.c",
+      "patch": "diff --git a/arch/arm/lib/zimage.c b/arch/arm/lib/zimage.c\nindex 51287251b3f..45e9c4506a9 100644\n--- a/arch/arm/lib/zimage.c\n+++ b/arch/arm/lib/zimage.c\n@@ -6,6 +6,7 @@\n  * bootz code:\n  * Copyright (C) 2012 Marek Vasut <marek.vasut@gmail.com>\n  */\n+#include <common.h>\n #include <image.h>\n \n #define\tLINUX_ARM_ZIMAGE_MAGIC\t0x016f2818"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/x86/lib/zimage.c",
+      "patch": "diff --git a/arch/x86/lib/zimage.c b/arch/x86/lib/zimage.c\nindex 73a21bc8f03..d7403876c13 100644\n--- a/arch/x86/lib/zimage.c\n+++ b/arch/x86/lib/zimage.c\n@@ -14,6 +14,7 @@\n \n #define LOG_CATEGORY\tLOGC_BOOT\n \n+#include <common.h>\n #include <bootm.h>\n #include <command.h>\n #include <env.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/arm/include/asm/global_data.h",
+      "patch": "diff --git a/arch/arm/include/asm/global_data.h b/arch/arm/include/asm/global_data.h\nindex 45401d5e3c8..452bcd1b8fd 100644\n--- a/arch/arm/include/asm/global_data.h\n+++ b/arch/arm/include/asm/global_data.h\n@@ -12,7 +12,6 @@\n #include <config.h>\n \n #include <linux/types.h>\n-#include <asm/u-boot.h>\n \n /* Architecture-specific global data */\n struct arch_global_data {"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/x86/include/asm/global_data.h",
+      "patch": "diff --git a/arch/x86/include/asm/global_data.h b/arch/x86/include/asm/global_data.h\nindex 06bd80ccc13..1ef7f1f0349 100644\n--- a/arch/x86/include/asm/global_data.h\n+++ b/arch/x86/include/asm/global_data.h\n@@ -12,7 +12,6 @@\n #include <linux/types.h>\n #include <asm/processor.h>\n #include <asm/mrccache.h>\n-#include <asm/u-boot.h>\n \n enum pei_boot_mode_t {\n \tPEI_BOOT_NONE = 0,"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/powerpc/include/asm/global_data.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/global_data.h b/arch/powerpc/include/asm/global_data.h\nindex a9efbbdd3d4..f7860122a00 100644\n--- a/arch/powerpc/include/asm/global_data.h\n+++ b/arch/powerpc/include/asm/global_data.h\n@@ -93,6 +93,4 @@ struct arch_global_data {\n \n #define DECLARE_GLOBAL_DATA_PTR     register volatile gd_t *gd asm (\"r2\")\n \n-#include <asm/u-boot.h>\n-\n #endif /* __ASM_GBL_DATA_H */"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "arch/mips/include/asm/global_data.h",
+      "patch": "diff --git a/arch/mips/include/asm/global_data.h b/arch/mips/include/asm/global_data.h\nindex 147a95ecea8..34b7e0bed94 100644\n--- a/arch/mips/include/asm/global_data.h\n+++ b/arch/mips/include/asm/global_data.h\n@@ -9,7 +9,6 @@\n \n #include <linux/types.h>\n #include <asm/regdef.h>\n-#include <asm/u-boot.h>\n \n struct octeon_eeprom_mac_addr {\n \tu8 mac_addr_base[6];"
+    }
+  ],
+  [
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "board/emulation/qemu-arm/qemu-arm.c",
+      "patch": "diff --git a/board/emulation/qemu-arm/qemu-arm.c b/board/emulation/qemu-arm/qemu-arm.c\nindex 6095cb02b23..ecfd19f1a7e 100644\n--- a/board/emulation/qemu-arm/qemu-arm.c\n+++ b/board/emulation/qemu-arm/qemu-arm.c\n@@ -3,7 +3,7 @@\n  * Copyright (c) 2017 Tuomas Tynkkynen\n  */\n \n-#include <config.h>\n+#include <common.h>\n #include <cpu_func.h>\n #include <dm.h>\n #include <efi.h>"
+    },
+    {
+      "commit_id": "d678a59d2d719da9e807495b4b021501f2836ca5",
+      "file_name": "board/emulation/qemu-riscv/qemu-riscv.c",
+      "patch": "diff --git a/board/emulation/qemu-riscv/qemu-riscv.c b/board/emulation/qemu-riscv/qemu-riscv.c\nindex e5193e31e37..173245b40e3 100644\n--- a/board/emulation/qemu-riscv/qemu-riscv.c\n+++ b/board/emulation/qemu-riscv/qemu-riscv.c\n@@ -3,6 +3,7 @@\n  * Copyright (C) 2018, Bin Meng <bmeng.cn@gmail.com>\n  */\n \n+#include <common.h>\n #include <dm.h>\n #include <dm/ofnode.h>\n #include <env.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/lib/asm-offsets.c",
+      "patch": "diff --git a/arch/arm/lib/asm-offsets.c b/arch/arm/lib/asm-offsets.c\nindex 181a8ac4c27..9afd8375999 100644\n--- a/arch/arm/lib/asm-offsets.c\n+++ b/arch/arm/lib/asm-offsets.c\n@@ -16,7 +16,6 @@\n  *   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>\n  */\n \n-#include <common.h>\n #include <linux/kbuild.h>\n #include <linux/arm-smccc.h>\n "
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/x86/lib/asm-offsets.c",
+      "patch": "diff --git a/arch/x86/lib/asm-offsets.c b/arch/x86/lib/asm-offsets.c\nindex 8df67db65c3..7b2905dda56 100644\n--- a/arch/x86/lib/asm-offsets.c\n+++ b/arch/x86/lib/asm-offsets.c\n@@ -11,7 +11,6 @@\n  * #defines from the assembly-language output.\n  */\n \n-#include <common.h>\n #include <asm/global_data.h>\n #include <linux/kbuild.h>\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/lib/bdinfo.c",
+      "patch": "diff --git a/arch/arm/lib/bdinfo.c b/arch/arm/lib/bdinfo.c\nindex b88b01eefdc..7c49462c8eb 100644\n--- a/arch/arm/lib/bdinfo.c\n+++ b/arch/arm/lib/bdinfo.c\n@@ -6,7 +6,7 @@\n  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.\n  */\n \n-#include <common.h>\n+#include <config.h>\n #include <init.h>\n #include <asm/global_data.h>\n #include <asm/mach-types.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/x86/lib/bdinfo.c",
+      "patch": "diff --git a/arch/x86/lib/bdinfo.c b/arch/x86/lib/bdinfo.c\nindex 124058442c5..165e8ab944f 100644\n--- a/arch/x86/lib/bdinfo.c\n+++ b/arch/x86/lib/bdinfo.c\n@@ -5,7 +5,6 @@\n  * Copyright 2021 Google LLC\n  */\n \n-#include <common.h>\n #include <efi.h>\n #include <init.h>\n #include <asm/cpu.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/powerpc/lib/bdinfo.c",
+      "patch": "diff --git a/arch/powerpc/lib/bdinfo.c b/arch/powerpc/lib/bdinfo.c\nindex 55dcad5df8e..6491c210f4e 100644\n--- a/arch/powerpc/lib/bdinfo.c\n+++ b/arch/powerpc/lib/bdinfo.c\n@@ -6,7 +6,6 @@\n  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.\n  */\n \n-#include <common.h>\n #include <init.h>\n #include <asm/global_data.h>\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/lib/bootm.c",
+      "patch": "diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c\nindex f30a483ed8b..192c120a7d2 100644\n--- a/arch/arm/lib/bootm.c\n+++ b/arch/arm/lib/bootm.c\n@@ -11,7 +11,6 @@\n  * Copyright (C) 2001  Erik Mouw (J.A.K.Mouw@its.tudelft.nl)\n  */\n \n-#include <common.h>\n #include <bootm.h>\n #include <bootstage.h>\n #include <command.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex 050c420e86b..2c889bcd33c 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -7,7 +7,6 @@\n  * Copyright (C) 2001  Erik Mouw (J.A.K.Mouw@its.tudelft.nl)\n  */\n \n-#include <common.h>\n #include <bootm.h>\n #include <bootstage.h>\n #include <command.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/powerpc/lib/bootm.c",
+      "patch": "diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c\nindex 75c6bfd2bf8..f55b5ff8320 100644\n--- a/arch/powerpc/lib/bootm.c\n+++ b/arch/powerpc/lib/bootm.c\n@@ -7,7 +7,7 @@\n  */\n \n \n-#include <common.h>\n+#include <config.h>\n #include <bootm.h>\n #include <bootstage.h>\n #include <cpu_func.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/lib/cache.c",
+      "patch": "diff --git a/arch/arm/lib/cache.c b/arch/arm/lib/cache.c\nindex 7a160158671..b2ae74a59f1 100644\n--- a/arch/arm/lib/cache.c\n+++ b/arch/arm/lib/cache.c\n@@ -6,7 +6,7 @@\n \n /* for now: just dummy functions to satisfy the linker */\n \n-#include <common.h>\n+#include <config.h>\n #include <cpu_func.h>\n #include <log.h>\n #include <malloc.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/powerpc/lib/cache.c",
+      "patch": "diff --git a/arch/powerpc/lib/cache.c b/arch/powerpc/lib/cache.c\nindex c4c5c2d4513..e480b269649 100644\n--- a/arch/powerpc/lib/cache.c\n+++ b/arch/powerpc/lib/cache.c\n@@ -4,7 +4,6 @@\n  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.\n  */\n \n-#include <common.h>\n #include <cpu_func.h>\n #include <asm/cache.h>\n #include <watchdog.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/lib/cmd_boot.c",
+      "patch": "diff --git a/arch/arm/lib/cmd_boot.c b/arch/arm/lib/cmd_boot.c\nindex c905ecc4bd9..5df5bc305a2 100644\n--- a/arch/arm/lib/cmd_boot.c\n+++ b/arch/arm/lib/cmd_boot.c\n@@ -17,7 +17,6 @@\n  * Copyright 2015 Konsulko Group, Matt Porter <mporter@konsulko.com>\n  */\n \n-#include <common.h>\n #include <command.h>\n \n /*"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/x86/lib/cmd_boot.c",
+      "patch": "diff --git a/arch/x86/lib/cmd_boot.c b/arch/x86/lib/cmd_boot.c\nindex 4facbe5f32f..0444a5f89d3 100644\n--- a/arch/x86/lib/cmd_boot.c\n+++ b/arch/x86/lib/cmd_boot.c\n@@ -14,7 +14,6 @@\n  * Marius Groeger <mgroeger@sysgo.de>\n  */\n \n-#include <common.h>\n #include <command.h>\n #include <malloc.h>\n #include <asm/global_data.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/lib/interrupts.c",
+      "patch": "diff --git a/arch/arm/lib/interrupts.c b/arch/arm/lib/interrupts.c\nindex 9961472f69f..333a5026a46 100644\n--- a/arch/arm/lib/interrupts.c\n+++ b/arch/arm/lib/interrupts.c\n@@ -18,7 +18,6 @@\n  * Philippe Robin, ARM Ltd. <philippe.robin@arm.com>\n  */\n \n-#include <common.h>\n #include <cpu_func.h>\n #include <efi_loader.h>\n #include <irq_func.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/x86/lib/interrupts.c",
+      "patch": "diff --git a/arch/x86/lib/interrupts.c b/arch/x86/lib/interrupts.c\nindex ff52959ed28..f96b2bfd70e 100644\n--- a/arch/x86/lib/interrupts.c\n+++ b/arch/x86/lib/interrupts.c\n@@ -29,7 +29,6 @@\n  * Daniel Engström\n  */\n \n-#include <common.h>\n #include <command.h>\n #include <irq_func.h>\n #include <asm/interrupt.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/powerpc/lib/interrupts.c",
+      "patch": "diff --git a/arch/powerpc/lib/interrupts.c b/arch/powerpc/lib/interrupts.c\nindex df312dfa28e..92b8a0bceac 100644\n--- a/arch/powerpc/lib/interrupts.c\n+++ b/arch/powerpc/lib/interrupts.c\n@@ -7,7 +7,7 @@\n  * Gleb Natapov <gnatapov@mrv.com>\n  */\n \n-#include <common.h>\n+#include <asm/ppc.h>\n #include <irq_func.h>\n #include <asm/processor.h>\n #include <watchdog.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/lib/spl.c",
+      "patch": "diff --git a/arch/arm/lib/spl.c b/arch/arm/lib/spl.c\nindex b13897495da..c43a63f1819 100644\n--- a/arch/arm/lib/spl.c\n+++ b/arch/arm/lib/spl.c\n@@ -7,7 +7,6 @@\n  * Tom Rini <trini@ti.com>\n  */\n \n-#include <common.h>\n #include <config.h>\n #include <init.h>\n #include <log.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/x86/lib/spl.c",
+      "patch": "diff --git a/arch/x86/lib/spl.c b/arch/x86/lib/spl.c\nindex c15f11f8cdf..f761fbc8bc3 100644\n--- a/arch/x86/lib/spl.c\n+++ b/arch/x86/lib/spl.c\n@@ -5,7 +5,6 @@\n \n #define LOG_CATEGORY\tLOGC_BOOT\n \n-#include <common.h>\n #include <cpu_func.h>\n #include <debug_uart.h>\n #include <dm.h>\n@@ -29,6 +28,7 @@\n #include <asm/processor.h>\n #include <asm/qemu.h>\n #include <asm/spl.h>\n+#include <asm/u-boot-x86.h>\n #include <asm-generic/sections.h>\n \n DECLARE_GLOBAL_DATA_PTR;"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/powerpc/lib/spl.c",
+      "patch": "diff --git a/arch/powerpc/lib/spl.c b/arch/powerpc/lib/spl.c\nindex b638ea7be61..3a24cbfff3b 100644\n--- a/arch/powerpc/lib/spl.c\n+++ b/arch/powerpc/lib/spl.c\n@@ -2,7 +2,6 @@\n /*\n  * Copyright 2012 Stefan Roese <sr@denx.de>\n  */\n-#include <common.h>\n #include <config.h>\n #include <log.h>\n #include <spl.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/lib/stack.c",
+      "patch": "diff --git a/arch/arm/lib/stack.c b/arch/arm/lib/stack.c\nindex 656084c7e51..ea1b937add7 100644\n--- a/arch/arm/lib/stack.c\n+++ b/arch/arm/lib/stack.c\n@@ -10,7 +10,6 @@\n  * Sysgo Real-Time Solutions, GmbH <www.elinos.com>\n  * Marius Groeger <mgroeger@sysgo.de>\n  */\n-#include <common.h>\n #include <init.h>\n #include <lmb.h>\n #include <asm/global_data.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/powerpc/lib/stack.c",
+      "patch": "diff --git a/arch/powerpc/lib/stack.c b/arch/powerpc/lib/stack.c\nindex 2e731aa8701..afd869e4ac3 100644\n--- a/arch/powerpc/lib/stack.c\n+++ b/arch/powerpc/lib/stack.c\n@@ -10,7 +10,6 @@\n  * Sysgo Real-Time Solutions, GmbH <www.elinos.com>\n  * Marius Groeger <mgroeger@sysgo.de>\n  */\n-#include <common.h>\n #include <init.h>\n #include <asm/global_data.h>\n #include <asm/mp.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/lib/zimage.c",
+      "patch": "diff --git a/arch/arm/lib/zimage.c b/arch/arm/lib/zimage.c\nindex 45e9c4506a9..51287251b3f 100644\n--- a/arch/arm/lib/zimage.c\n+++ b/arch/arm/lib/zimage.c\n@@ -6,7 +6,6 @@\n  * bootz code:\n  * Copyright (C) 2012 Marek Vasut <marek.vasut@gmail.com>\n  */\n-#include <common.h>\n #include <image.h>\n \n #define\tLINUX_ARM_ZIMAGE_MAGIC\t0x016f2818"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/x86/lib/zimage.c",
+      "patch": "diff --git a/arch/x86/lib/zimage.c b/arch/x86/lib/zimage.c\nindex d7403876c13..73a21bc8f03 100644\n--- a/arch/x86/lib/zimage.c\n+++ b/arch/x86/lib/zimage.c\n@@ -14,7 +14,6 @@\n \n #define LOG_CATEGORY\tLOGC_BOOT\n \n-#include <common.h>\n #include <bootm.h>\n #include <command.h>\n #include <env.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/arm/include/asm/global_data.h",
+      "patch": "diff --git a/arch/arm/include/asm/global_data.h b/arch/arm/include/asm/global_data.h\nindex 452bcd1b8fd..45401d5e3c8 100644\n--- a/arch/arm/include/asm/global_data.h\n+++ b/arch/arm/include/asm/global_data.h\n@@ -12,6 +12,7 @@\n #include <config.h>\n \n #include <linux/types.h>\n+#include <asm/u-boot.h>\n \n /* Architecture-specific global data */\n struct arch_global_data {"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/x86/include/asm/global_data.h",
+      "patch": "diff --git a/arch/x86/include/asm/global_data.h b/arch/x86/include/asm/global_data.h\nindex 1ef7f1f0349..06bd80ccc13 100644\n--- a/arch/x86/include/asm/global_data.h\n+++ b/arch/x86/include/asm/global_data.h\n@@ -12,6 +12,7 @@\n #include <linux/types.h>\n #include <asm/processor.h>\n #include <asm/mrccache.h>\n+#include <asm/u-boot.h>\n \n enum pei_boot_mode_t {\n \tPEI_BOOT_NONE = 0,"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/powerpc/include/asm/global_data.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/global_data.h b/arch/powerpc/include/asm/global_data.h\nindex f7860122a00..a9efbbdd3d4 100644\n--- a/arch/powerpc/include/asm/global_data.h\n+++ b/arch/powerpc/include/asm/global_data.h\n@@ -93,4 +93,6 @@ struct arch_global_data {\n \n #define DECLARE_GLOBAL_DATA_PTR     register volatile gd_t *gd asm (\"r2\")\n \n+#include <asm/u-boot.h>\n+\n #endif /* __ASM_GBL_DATA_H */"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "arch/mips/include/asm/global_data.h",
+      "patch": "diff --git a/arch/mips/include/asm/global_data.h b/arch/mips/include/asm/global_data.h\nindex 34b7e0bed94..147a95ecea8 100644\n--- a/arch/mips/include/asm/global_data.h\n+++ b/arch/mips/include/asm/global_data.h\n@@ -9,6 +9,7 @@\n \n #include <linux/types.h>\n #include <asm/regdef.h>\n+#include <asm/u-boot.h>\n \n struct octeon_eeprom_mac_addr {\n \tu8 mac_addr_base[6];"
+    }
+  ],
+  [
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "board/emulation/qemu-arm/qemu-arm.c",
+      "patch": "diff --git a/board/emulation/qemu-arm/qemu-arm.c b/board/emulation/qemu-arm/qemu-arm.c\nindex ecfd19f1a7e..6095cb02b23 100644\n--- a/board/emulation/qemu-arm/qemu-arm.c\n+++ b/board/emulation/qemu-arm/qemu-arm.c\n@@ -3,7 +3,7 @@\n  * Copyright (c) 2017 Tuomas Tynkkynen\n  */\n \n-#include <common.h>\n+#include <config.h>\n #include <cpu_func.h>\n #include <dm.h>\n #include <efi.h>"
+    },
+    {
+      "commit_id": "03de305ec48b0bb28554372abb40ccd46dbe0bf9",
+      "file_name": "board/emulation/qemu-riscv/qemu-riscv.c",
+      "patch": "diff --git a/board/emulation/qemu-riscv/qemu-riscv.c b/board/emulation/qemu-riscv/qemu-riscv.c\nindex 173245b40e3..e5193e31e37 100644\n--- a/board/emulation/qemu-riscv/qemu-riscv.c\n+++ b/board/emulation/qemu-riscv/qemu-riscv.c\n@@ -3,7 +3,6 @@\n  * Copyright (C) 2018, Bin Meng <bmeng.cn@gmail.com>\n  */\n \n-#include <common.h>\n #include <dm.h>\n #include <dm/ofnode.h>\n #include <env.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "6a7185887b83a5cc334c7ce5bd65970381b2f4ce",
+      "file_name": "arch/arm/lib/bdinfo.c",
+      "patch": "diff --git a/arch/arm/lib/bdinfo.c b/arch/arm/lib/bdinfo.c\nindex 40255ace405..7c49462c8eb 100644\n--- a/arch/arm/lib/bdinfo.c\n+++ b/arch/arm/lib/bdinfo.c\n@@ -9,7 +9,6 @@\n #include <config.h>\n #include <init.h>\n #include <asm/global_data.h>\n-#include <asm/u-boot.h>\n #include <asm/mach-types.h>\n \n DECLARE_GLOBAL_DATA_PTR;"
+    },
+    {
+      "commit_id": "6a7185887b83a5cc334c7ce5bd65970381b2f4ce",
+      "file_name": "arch/powerpc/lib/bdinfo.c",
+      "patch": "diff --git a/arch/powerpc/lib/bdinfo.c b/arch/powerpc/lib/bdinfo.c\nindex c12e4c6371f..6491c210f4e 100644\n--- a/arch/powerpc/lib/bdinfo.c\n+++ b/arch/powerpc/lib/bdinfo.c\n@@ -8,7 +8,6 @@\n \n #include <init.h>\n #include <asm/global_data.h>\n-#include <asm/u-boot.h>\n \n DECLARE_GLOBAL_DATA_PTR;\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "6a7185887b83a5cc334c7ce5bd65970381b2f4ce",
+      "file_name": "arch/arm/include/asm/global_data.h",
+      "patch": "diff --git a/arch/arm/include/asm/global_data.h b/arch/arm/include/asm/global_data.h\nindex 452bcd1b8fd..45401d5e3c8 100644\n--- a/arch/arm/include/asm/global_data.h\n+++ b/arch/arm/include/asm/global_data.h\n@@ -12,6 +12,7 @@\n #include <config.h>\n \n #include <linux/types.h>\n+#include <asm/u-boot.h>\n \n /* Architecture-specific global data */\n struct arch_global_data {"
+    },
+    {
+      "commit_id": "6a7185887b83a5cc334c7ce5bd65970381b2f4ce",
+      "file_name": "arch/x86/include/asm/global_data.h",
+      "patch": "diff --git a/arch/x86/include/asm/global_data.h b/arch/x86/include/asm/global_data.h\nindex 1ef7f1f0349..06bd80ccc13 100644\n--- a/arch/x86/include/asm/global_data.h\n+++ b/arch/x86/include/asm/global_data.h\n@@ -12,6 +12,7 @@\n #include <linux/types.h>\n #include <asm/processor.h>\n #include <asm/mrccache.h>\n+#include <asm/u-boot.h>\n \n enum pei_boot_mode_t {\n \tPEI_BOOT_NONE = 0,"
+    },
+    {
+      "commit_id": "6a7185887b83a5cc334c7ce5bd65970381b2f4ce",
+      "file_name": "arch/powerpc/include/asm/global_data.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/global_data.h b/arch/powerpc/include/asm/global_data.h\nindex f7860122a00..a9efbbdd3d4 100644\n--- a/arch/powerpc/include/asm/global_data.h\n+++ b/arch/powerpc/include/asm/global_data.h\n@@ -93,4 +93,6 @@ struct arch_global_data {\n \n #define DECLARE_GLOBAL_DATA_PTR     register volatile gd_t *gd asm (\"r2\")\n \n+#include <asm/u-boot.h>\n+\n #endif /* __ASM_GBL_DATA_H */"
+    },
+    {
+      "commit_id": "6a7185887b83a5cc334c7ce5bd65970381b2f4ce",
+      "file_name": "arch/mips/include/asm/global_data.h",
+      "patch": "diff --git a/arch/mips/include/asm/global_data.h b/arch/mips/include/asm/global_data.h\nindex 34b7e0bed94..147a95ecea8 100644\n--- a/arch/mips/include/asm/global_data.h\n+++ b/arch/mips/include/asm/global_data.h\n@@ -9,6 +9,7 @@\n \n #include <linux/types.h>\n #include <asm/regdef.h>\n+#include <asm/u-boot.h>\n \n struct octeon_eeprom_mac_addr {\n \tu8 mac_addr_base[6];"
+    }
+  ],
+  [
+    {
+      "commit_id": "210af54947e1b88f1fb961fec51d6427f5ec8575",
+      "file_name": "arch/arm/lib/bootm.c",
+      "patch": "diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c\nindex e414ef82673..c56285738a2 100644\n--- a/arch/arm/lib/bootm.c\n+++ b/arch/arm/lib/bootm.c\n@@ -199,7 +199,7 @@ static void boot_prep_linux(struct bootm_headers *images)\n {\n \tchar *commandline = env_get(\"bootargs\");\n \n-\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && CONFIG_IS_ENABLED(LMB) && images->ft_len) {\n+\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && IS_ENABLED(CONFIG_LMB) && images->ft_len) {\n \t\tdebug(\"using: FDT\\n\");\n \t\tif (image_setup_linux(images)) {\n \t\t\tpanic(\"FDT creation failed!\");"
+    },
+    {
+      "commit_id": "210af54947e1b88f1fb961fec51d6427f5ec8575",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex 04e475bdc24..873e2bc176f 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -78,7 +78,7 @@ static int boot_prep_linux(struct bootm_headers *images)\n \tsize_t len;\n \tint ret;\n \n-\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && CONFIG_IS_ENABLED(LMB) && images->ft_len) {\n+\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && IS_ENABLED(CONFIG_LMB) && images->ft_len) {\n \t\tdebug(\"using: FDT\\n\");\n \t\tif (image_setup_linux(images)) {\n \t\t\tputs(\"FDT creation failed! hanging...\");"
+    },
+    {
+      "commit_id": "210af54947e1b88f1fb961fec51d6427f5ec8575",
+      "file_name": "arch/powerpc/lib/bootm.c",
+      "patch": "diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c\nindex 7b392b06bcb..910121ec9c8 100644\n--- a/arch/powerpc/lib/bootm.c\n+++ b/arch/powerpc/lib/bootm.c\n@@ -214,7 +214,7 @@ static int boot_body_linux(struct bootm_headers *images)\n \tif (ret)\n \t\treturn ret;\n \n-\tif (CONFIG_IS_ENABLED(LMB)) {\n+\tif (IS_ENABLED(CONFIG_LMB)) {\n \t\tret = image_setup_linux(images);\n \t\tif (ret)\n \t\t\treturn ret;"
+    },
+    {
+      "commit_id": "210af54947e1b88f1fb961fec51d6427f5ec8575",
+      "file_name": "arch/riscv/lib/bootm.c",
+      "patch": "diff --git a/arch/riscv/lib/bootm.c b/arch/riscv/lib/bootm.c\nindex f5f8b4c7333..276677a5e2f 100644\n--- a/arch/riscv/lib/bootm.c\n+++ b/arch/riscv/lib/bootm.c\n@@ -64,7 +64,7 @@ static void announce_and_cleanup(int fake)\n \n static void boot_prep_linux(struct bootm_headers *images)\n {\n-\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && CONFIG_IS_ENABLED(LMB) && images->ft_len) {\n+\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && IS_ENABLED(CONFIG_LMB) && images->ft_len) {\n \t\tdebug(\"using: FDT\\n\");\n \t\tif (image_setup_linux(images)) {\n \t\t\tprintf(\"FDT creation failed! hanging...\");"
+    }
+  ],
+  [
+    {
+      "commit_id": "d9d7c20b731788c5c8018ce8e5c6e86bb01413df",
+      "file_name": "arch/arm/lib/bootm.c",
+      "patch": "diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c\nindex 9f086f3b904..e414ef82673 100644\n--- a/arch/arm/lib/bootm.c\n+++ b/arch/arm/lib/bootm.c\n@@ -192,10 +192,10 @@ static void do_nonsec_virt_switch(void)\n }\n #endif\n \n-__weak void board_prep_linux(bootm_headers_t *images) { }\n+__weak void board_prep_linux(struct bootm_headers *images) { }\n \n /* Subcommand: PREP */\n-static void boot_prep_linux(bootm_headers_t *images)\n+static void boot_prep_linux(struct bootm_headers *images)\n {\n \tchar *commandline = env_get(\"bootargs\");\n \n@@ -288,7 +288,7 @@ static void switch_to_el1(void)\n #endif\n \n /* Subcommand: GO */\n-static void boot_jump_linux(bootm_headers_t *images, int flag)\n+static void boot_jump_linux(struct bootm_headers *images, int flag)\n {\n #ifdef CONFIG_ARM64\n \tvoid (*kernel_entry)(void *fdt_addr, void *res0, void *res1,\n@@ -379,7 +379,7 @@ static void boot_jump_linux(bootm_headers_t *images, int flag)\n  * they are called if subcommand is equal 0.\n  */\n int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t   bootm_headers_t *images)\n+\t\t   struct bootm_headers *images)\n {\n \t/* No need for those on ARM */\n \tif (flag & BOOTM_STATE_OS_BD_T || flag & BOOTM_STATE_OS_CMDLINE)\n@@ -401,7 +401,7 @@ int do_bootm_linux(int flag, int argc, char *const argv[],\n }\n \n #if defined(CONFIG_BOOTM_VXWORKS)\n-void boot_prep_vxworks(bootm_headers_t *images)\n+void boot_prep_vxworks(struct bootm_headers *images)\n {\n #if defined(CONFIG_OF_LIBFDT)\n \tint off;\n@@ -416,7 +416,8 @@ void boot_prep_vxworks(bootm_headers_t *images)\n #endif\n \tcleanup_before_linux();\n }\n-void boot_jump_vxworks(bootm_headers_t *images)\n+\n+void boot_jump_vxworks(struct bootm_headers *images)\n {\n #if defined(CONFIG_ARM64) && defined(CONFIG_ARMV8_PSCI)\n \tarmv8_setup_psci();"
+    },
+    {
+      "commit_id": "d9d7c20b731788c5c8018ce8e5c6e86bb01413df",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex 1bcdb3e30d2..4fdf1b2365a 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -69,7 +69,7 @@ int arch_fixup_memory_node(void *blob)\n #endif\n \n /* Subcommand: PREP */\n-static int boot_prep_linux(bootm_headers_t *images)\n+static int boot_prep_linux(struct bootm_headers *images)\n {\n \tchar *cmd_line_dest = NULL;\n \timage_header_t *hdr;\n@@ -201,7 +201,7 @@ int boot_linux_kernel(ulong setup_base, ulong load_address, bool image_64bit)\n }\n \n /* Subcommand: GO */\n-static int boot_jump_linux(bootm_headers_t *images)\n+static int boot_jump_linux(struct bootm_headers *images)\n {\n \tdebug(\"## Transferring control to Linux (at address %08lx, kernel %08lx) ...\\n\",\n \t      images->ep, images->os.load);\n@@ -211,7 +211,7 @@ static int boot_jump_linux(bootm_headers_t *images)\n }\n \n int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t   bootm_headers_t *images)\n+\t\t   struct bootm_headers *images)\n {\n \t/* No need for those on x86 */\n \tif (flag & BOOTM_STATE_OS_BD_T || flag & BOOTM_STATE_OS_CMDLINE)"
+    },
+    {
+      "commit_id": "d9d7c20b731788c5c8018ce8e5c6e86bb01413df",
+      "file_name": "arch/powerpc/lib/bootm.c",
+      "patch": "diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c\nindex b92df9543eb..512787854c8 100644\n--- a/arch/powerpc/lib/bootm.c\n+++ b/arch/powerpc/lib/bootm.c\n@@ -45,7 +45,7 @@ static void set_clocks_in_mhz (struct bd_info *kbd);\n #define CONFIG_SYS_LINUX_LOWMEM_MAX_SIZE\t(768*1024*1024)\n #endif\n \n-static void boot_jump_linux(bootm_headers_t *images)\n+static void boot_jump_linux(struct bootm_headers *images)\n {\n \tvoid\t(*kernel)(struct bd_info *, ulong r4, ulong r5, ulong r6,\n \t\t\t      ulong r7, ulong r8, ulong r9);\n@@ -151,7 +151,7 @@ void arch_lmb_reserve(struct lmb *lmb)\n \treturn ;\n }\n \n-static void boot_prep_linux(bootm_headers_t *images)\n+static void boot_prep_linux(struct bootm_headers *images)\n {\n #ifdef CONFIG_MP\n \t/*\n@@ -163,7 +163,7 @@ static void boot_prep_linux(bootm_headers_t *images)\n #endif\n }\n \n-static int boot_cmdline_linux(bootm_headers_t *images)\n+static int boot_cmdline_linux(struct bootm_headers *images)\n {\n \tulong of_size = images->ft_len;\n \tstruct lmb *lmb = &images->lmb;\n@@ -184,7 +184,7 @@ static int boot_cmdline_linux(bootm_headers_t *images)\n \treturn ret;\n }\n \n-static int boot_bd_t_linux(bootm_headers_t *images)\n+static int boot_bd_t_linux(struct bootm_headers *images)\n {\n \tulong of_size = images->ft_len;\n \tstruct lmb *lmb = &images->lmb;\n@@ -205,7 +205,7 @@ static int boot_bd_t_linux(bootm_headers_t *images)\n \treturn ret;\n }\n \n-static int boot_body_linux(bootm_headers_t *images)\n+static int boot_body_linux(struct bootm_headers *images)\n {\n \tint ret;\n \n@@ -224,7 +224,7 @@ static int boot_body_linux(bootm_headers_t *images)\n }\n \n noinline int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t\t    bootm_headers_t *images)\n+\t\t\t    struct bootm_headers *images)\n {\n \tint\tret;\n \n@@ -273,7 +273,7 @@ static void set_clocks_in_mhz (struct bd_info *kbd)\n }\n \n #if defined(CONFIG_BOOTM_VXWORKS)\n-void boot_prep_vxworks(bootm_headers_t *images)\n+void boot_prep_vxworks(struct bootm_headers *images)\n {\n #if defined(CONFIG_OF_LIBFDT)\n \tint off;\n@@ -305,7 +305,7 @@ void boot_prep_vxworks(bootm_headers_t *images)\n #endif\n }\n \n-void boot_jump_vxworks(bootm_headers_t *images)\n+void boot_jump_vxworks(struct bootm_headers *images)\n {\n \t/* PowerPC VxWorks boot interface conforms to the ePAPR standard\n \t * general purpuse registers:"
+    },
+    {
+      "commit_id": "d9d7c20b731788c5c8018ce8e5c6e86bb01413df",
+      "file_name": "arch/riscv/lib/bootm.c",
+      "patch": "diff --git a/arch/riscv/lib/bootm.c b/arch/riscv/lib/bootm.c\nindex 670d9c9ebcf..f5f8b4c7333 100644\n--- a/arch/riscv/lib/bootm.c\n+++ b/arch/riscv/lib/bootm.c\n@@ -62,7 +62,7 @@ static void announce_and_cleanup(int fake)\n \tcleanup_before_linux();\n }\n \n-static void boot_prep_linux(bootm_headers_t *images)\n+static void boot_prep_linux(struct bootm_headers *images)\n {\n \tif (CONFIG_IS_ENABLED(OF_LIBFDT) && CONFIG_IS_ENABLED(LMB) && images->ft_len) {\n \t\tdebug(\"using: FDT\\n\");\n@@ -76,7 +76,7 @@ static void boot_prep_linux(bootm_headers_t *images)\n \t}\n }\n \n-static void boot_jump_linux(bootm_headers_t *images, int flag)\n+static void boot_jump_linux(struct bootm_headers *images, int flag)\n {\n \tvoid (*kernel)(ulong hart, void *dtb);\n \tint fake = (flag & BOOTM_STATE_OS_FAKE_GO);\n@@ -107,7 +107,7 @@ static void boot_jump_linux(bootm_headers_t *images, int flag)\n }\n \n int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t   bootm_headers_t *images)\n+\t\t   struct bootm_headers *images)\n {\n \t/* No need for those on RISC-V */\n \tif (flag & BOOTM_STATE_OS_BD_T || flag & BOOTM_STATE_OS_CMDLINE)\n@@ -129,7 +129,7 @@ int do_bootm_linux(int flag, int argc, char *const argv[],\n }\n \n int do_bootm_vxworks(int flag, int argc, char *const argv[],\n-\t\t     bootm_headers_t *images)\n+\t\t     struct bootm_headers *images)\n {\n \treturn do_bootm_linux(flag, argc, argv, images);\n }"
+    },
+    {
+      "commit_id": "d9d7c20b731788c5c8018ce8e5c6e86bb01413df",
+      "file_name": "arch/mips/lib/bootm.c",
+      "patch": "diff --git a/arch/mips/lib/bootm.c b/arch/mips/lib/bootm.c\nindex cab8da4860c..5fda914e6ba 100644\n--- a/arch/mips/lib/bootm.c\n+++ b/arch/mips/lib/bootm.c\n@@ -71,7 +71,7 @@ static void linux_cmdline_dump(void)\n \t\tdebug(\"   arg %03d: %s\\n\", i, linux_argv[i]);\n }\n \n-static void linux_cmdline_legacy(bootm_headers_t *images)\n+static void linux_cmdline_legacy(struct bootm_headers *images)\n {\n \tconst char *bootargs, *next, *quote;\n \n@@ -111,7 +111,7 @@ static void linux_cmdline_legacy(bootm_headers_t *images)\n \t}\n }\n \n-static void linux_cmdline_append(bootm_headers_t *images)\n+static void linux_cmdline_append(struct bootm_headers *images)\n {\n \tchar buf[24];\n \tulong mem, rd_start, rd_size;\n@@ -164,7 +164,7 @@ static void linux_env_set(const char *env_name, const char *env_val)\n \t}\n }\n \n-static void linux_env_legacy(bootm_headers_t *images)\n+static void linux_env_legacy(struct bootm_headers *images)\n {\n \tchar env_buf[12];\n \tconst char *cp;\n@@ -213,7 +213,7 @@ static void linux_env_legacy(bootm_headers_t *images)\n \t}\n }\n \n-static int boot_reloc_fdt(bootm_headers_t *images)\n+static int boot_reloc_fdt(struct bootm_headers *images)\n {\n \t/*\n \t * In case of legacy uImage's, relocation of FDT is already done\n@@ -243,7 +243,7 @@ int arch_fixup_fdt(void *blob)\n }\n #endif\n \n-static int boot_setup_fdt(bootm_headers_t *images)\n+static int boot_setup_fdt(struct bootm_headers *images)\n {\n \timages->initrd_start = virt_to_phys((void *)images->initrd_start);\n \timages->initrd_end = virt_to_phys((void *)images->initrd_end);\n@@ -251,7 +251,7 @@ static int boot_setup_fdt(bootm_headers_t *images)\n \t\t&images->lmb);\n }\n \n-static void boot_prep_linux(bootm_headers_t *images)\n+static void boot_prep_linux(struct bootm_headers *images)\n {\n \tif (CONFIG_IS_ENABLED(MIPS_BOOT_FDT) && images->ft_len) {\n \t\tboot_reloc_fdt(images);\n@@ -271,7 +271,7 @@ static void boot_prep_linux(bootm_headers_t *images)\n \t}\n }\n \n-static void boot_jump_linux(bootm_headers_t *images)\n+static void boot_jump_linux(struct bootm_headers *images)\n {\n \ttypedef void __noreturn (*kernel_entry_t)(int, ulong, ulong, ulong);\n \tkernel_entry_t kernel = (kernel_entry_t) images->ep;\n@@ -302,7 +302,7 @@ static void boot_jump_linux(bootm_headers_t *images)\n }\n \n int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t   bootm_headers_t *images)\n+\t\t   struct bootm_headers *images)\n {\n \t/* No need for those on MIPS */\n \tif (flag & BOOTM_STATE_OS_BD_T)"
+    }
+  ],
+  [
+    {
+      "commit_id": "65168910adaae3a4ac91fd5acf30941a28facc0e",
+      "file_name": "arch/arm/lib/bootm.c",
+      "patch": "diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c\nindex fc22befeac1..9f086f3b904 100644\n--- a/arch/arm/lib/bootm.c\n+++ b/arch/arm/lib/bootm.c\n@@ -199,7 +199,7 @@ static void boot_prep_linux(bootm_headers_t *images)\n {\n \tchar *commandline = env_get(\"bootargs\");\n \n-\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && images->ft_len) {\n+\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && CONFIG_IS_ENABLED(LMB) && images->ft_len) {\n \t\tdebug(\"using: FDT\\n\");\n \t\tif (image_setup_linux(images)) {\n \t\t\tpanic(\"FDT creation failed!\");"
+    },
+    {
+      "commit_id": "65168910adaae3a4ac91fd5acf30941a28facc0e",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex 57cba5c65d3..1bcdb3e30d2 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -78,15 +78,14 @@ static int boot_prep_linux(bootm_headers_t *images)\n \tsize_t len;\n \tint ret;\n \n-#ifdef CONFIG_OF_LIBFDT\n-\tif (images->ft_len) {\n+\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && CONFIG_IS_ENABLED(LMB) && images->ft_len) {\n \t\tdebug(\"using: FDT\\n\");\n \t\tif (image_setup_linux(images)) {\n \t\t\tputs(\"FDT creation failed! hanging...\");\n \t\t\thang();\n \t\t}\n \t}\n-#endif\n+\n \tif (images->legacy_hdr_valid) {\n \t\thdr = images->legacy_hdr_os;\n \t\tif (image_check_type(hdr, IH_TYPE_MULTI)) {"
+    },
+    {
+      "commit_id": "65168910adaae3a4ac91fd5acf30941a28facc0e",
+      "file_name": "arch/powerpc/lib/bootm.c",
+      "patch": "diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c\nindex d365705856d..e52aa75703f 100644\n--- a/arch/powerpc/lib/bootm.c\n+++ b/arch/powerpc/lib/bootm.c\n@@ -214,9 +214,11 @@ static int boot_body_linux(bootm_headers_t *images)\n \tif (ret)\n \t\treturn ret;\n \n-\tret = image_setup_linux(images);\n-\tif (ret)\n-\t\treturn ret;\n+\tif (CONFIG_IS_ENABLED(LMB)) {\n+\t\tret = image_setup_linux(images);\n+\t\tif (ret)\n+\t\t\treturn ret;\n+\t}\n \n \treturn 0;\n }"
+    },
+    {
+      "commit_id": "65168910adaae3a4ac91fd5acf30941a28facc0e",
+      "file_name": "arch/riscv/lib/bootm.c",
+      "patch": "diff --git a/arch/riscv/lib/bootm.c b/arch/riscv/lib/bootm.c\nindex c1ac339283a..670d9c9ebcf 100644\n--- a/arch/riscv/lib/bootm.c\n+++ b/arch/riscv/lib/bootm.c\n@@ -64,7 +64,7 @@ static void announce_and_cleanup(int fake)\n \n static void boot_prep_linux(bootm_headers_t *images)\n {\n-\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && images->ft_len) {\n+\tif (CONFIG_IS_ENABLED(OF_LIBFDT) && CONFIG_IS_ENABLED(LMB) && images->ft_len) {\n \t\tdebug(\"using: FDT\\n\");\n \t\tif (image_setup_linux(images)) {\n \t\t\tprintf(\"FDT creation failed! hanging...\");"
+    }
+  ],
+  [
+    {
+      "commit_id": "b09e462482b4b84f5d99986514db5fe8d10f4c2f",
+      "file_name": "arch/arm/lib/bootm.c",
+      "patch": "diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c\nindex a59a5e6c0ea..fc22befeac1 100644\n--- a/arch/arm/lib/bootm.c\n+++ b/arch/arm/lib/bootm.c\n@@ -200,12 +200,10 @@ static void boot_prep_linux(bootm_headers_t *images)\n \tchar *commandline = env_get(\"bootargs\");\n \n \tif (CONFIG_IS_ENABLED(OF_LIBFDT) && images->ft_len) {\n-#ifdef CONFIG_OF_LIBFDT\n \t\tdebug(\"using: FDT\\n\");\n \t\tif (image_setup_linux(images)) {\n \t\t\tpanic(\"FDT creation failed!\");\n \t\t}\n-#endif\n \t} else if (BOOTM_ENABLE_TAGS) {\n \t\tdebug(\"using: ATAGS\\n\");\n \t\tsetup_start_tag(gd->bd);"
+    },
+    {
+      "commit_id": "b09e462482b4b84f5d99986514db5fe8d10f4c2f",
+      "file_name": "arch/riscv/lib/bootm.c",
+      "patch": "diff --git a/arch/riscv/lib/bootm.c b/arch/riscv/lib/bootm.c\nindex 2e1e286c8ef..c1ac339283a 100644\n--- a/arch/riscv/lib/bootm.c\n+++ b/arch/riscv/lib/bootm.c\n@@ -65,13 +65,11 @@ static void announce_and_cleanup(int fake)\n static void boot_prep_linux(bootm_headers_t *images)\n {\n \tif (CONFIG_IS_ENABLED(OF_LIBFDT) && images->ft_len) {\n-#ifdef CONFIG_OF_LIBFDT\n \t\tdebug(\"using: FDT\\n\");\n \t\tif (image_setup_linux(images)) {\n \t\t\tprintf(\"FDT creation failed! hanging...\");\n \t\t\thang();\n \t\t}\n-#endif\n \t} else {\n \t\tprintf(\"Device tree not found or missing FDT support\\n\");\n \t\thang();"
+    }
+  ],
+  [
+    {
+      "commit_id": "a48336e5ea19ca0d32dfff1c4eaeececa8d2f570",
+      "file_name": "arch/arm/lib/bootm.c",
+      "patch": "diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c\nindex c56285738a2..f30a483ed8b 100644\n--- a/arch/arm/lib/bootm.c\n+++ b/arch/arm/lib/bootm.c\n@@ -12,6 +12,7 @@\n  */\n \n #include <common.h>\n+#include <bootm.h>\n #include <bootstage.h>\n #include <command.h>\n #include <cpu_func.h>\n@@ -378,9 +379,10 @@ static void boot_jump_linux(struct bootm_headers *images, int flag)\n  * DIFFERENCE: Instead of calling prep and go at the end\n  * they are called if subcommand is equal 0.\n  */\n-int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t   struct bootm_headers *images)\n+int do_bootm_linux(int flag, struct bootm_info *bmi)\n {\n+\tstruct bootm_headers *images = bmi->images;\n+\n \t/* No need for those on ARM */\n \tif (flag & BOOTM_STATE_OS_BD_T || flag & BOOTM_STATE_OS_CMDLINE)\n \t\treturn -1;"
+    },
+    {
+      "commit_id": "a48336e5ea19ca0d32dfff1c4eaeececa8d2f570",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex 3196f9ddc2c..050c420e86b 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -8,6 +8,7 @@\n  */\n \n #include <common.h>\n+#include <bootm.h>\n #include <bootstage.h>\n #include <command.h>\n #include <efi.h>\n@@ -237,9 +238,10 @@ static int boot_jump_linux(struct bootm_headers *images)\n \t\t\t\t images->os.arch == IH_ARCH_X86_64);\n }\n \n-int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t   struct bootm_headers *images)\n+int do_bootm_linux(int flag, struct bootm_info *bmi)\n {\n+\tstruct bootm_headers *images = bmi->images;\n+\n \t/* No need for those on x86 */\n \tif (flag & BOOTM_STATE_OS_BD_T || flag & BOOTM_STATE_OS_CMDLINE)\n \t\treturn -1;"
+    },
+    {
+      "commit_id": "a48336e5ea19ca0d32dfff1c4eaeececa8d2f570",
+      "file_name": "arch/powerpc/lib/bootm.c",
+      "patch": "diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c\nindex 910121ec9c8..75c6bfd2bf8 100644\n--- a/arch/powerpc/lib/bootm.c\n+++ b/arch/powerpc/lib/bootm.c\n@@ -8,6 +8,7 @@\n \n \n #include <common.h>\n+#include <bootm.h>\n #include <bootstage.h>\n #include <cpu_func.h>\n #include <env.h>\n@@ -223,9 +224,9 @@ static int boot_body_linux(struct bootm_headers *images)\n \treturn 0;\n }\n \n-noinline int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t\t    struct bootm_headers *images)\n+int do_bootm_linux(int flag, struct bootm_info *bmi)\n {\n+\tstruct bootm_headers *images = bmi->images;\n \tint\tret;\n \n \tif (flag & BOOTM_STATE_OS_CMDLINE) {"
+    },
+    {
+      "commit_id": "a48336e5ea19ca0d32dfff1c4eaeececa8d2f570",
+      "file_name": "arch/riscv/lib/bootm.c",
+      "patch": "diff --git a/arch/riscv/lib/bootm.c b/arch/riscv/lib/bootm.c\nindex f9e1e18ae02..13cbaaba682 100644\n--- a/arch/riscv/lib/bootm.c\n+++ b/arch/riscv/lib/bootm.c\n@@ -7,6 +7,7 @@\n  */\n \n #include <bootstage.h>\n+#include <bootm.h>\n #include <command.h>\n #include <dm.h>\n #include <fdt_support.h>\n@@ -105,9 +106,10 @@ static void boot_jump_linux(struct bootm_headers *images, int flag)\n \t}\n }\n \n-int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t   struct bootm_headers *images)\n+int do_bootm_linux(int flag, struct bootm_info *bmi)\n {\n+\tstruct bootm_headers *images = bmi->images;\n+\n \t/* No need for those on RISC-V */\n \tif (flag & BOOTM_STATE_OS_BD_T || flag & BOOTM_STATE_OS_CMDLINE)\n \t\treturn -1;\n@@ -127,10 +129,9 @@ int do_bootm_linux(int flag, int argc, char *const argv[],\n \treturn 0;\n }\n \n-int do_bootm_vxworks(int flag, int argc, char *const argv[],\n-\t\t     struct bootm_headers *images)\n+int do_bootm_vxworks(int flag, struct bootm_info *bmi)\n {\n-\treturn do_bootm_linux(flag, argc, argv, images);\n+\treturn do_bootm_linux(flag, bmi);\n }\n \n static ulong get_sp(void)"
+    },
+    {
+      "commit_id": "a48336e5ea19ca0d32dfff1c4eaeececa8d2f570",
+      "file_name": "arch/mips/lib/bootm.c",
+      "patch": "diff --git a/arch/mips/lib/bootm.c b/arch/mips/lib/bootm.c\nindex f1cff691f4f..286dbd5c458 100644\n--- a/arch/mips/lib/bootm.c\n+++ b/arch/mips/lib/bootm.c\n@@ -4,6 +4,7 @@\n  * Wolfgang Denk, DENX Software Engineering, wd@denx.de.\n  */\n \n+#include <bootm.h>\n #include <bootstage.h>\n #include <env.h>\n #include <image.h>\n@@ -300,9 +301,10 @@ static void boot_jump_linux(struct bootm_headers *images)\n \t\t\tlinux_extra);\n }\n \n-int do_bootm_linux(int flag, int argc, char *const argv[],\n-\t\t   struct bootm_headers *images)\n+int do_bootm_linux(int flag, struct bootm_info *bmi)\n {\n+\tstruct bootm_headers *images = bmi->images;\n+\n \t/* No need for those on MIPS */\n \tif (flag & BOOTM_STATE_OS_BD_T)\n \t\treturn -1;"
+    }
+  ],
+  [
+    {
+      "commit_id": "dabaa4ae32062cb3f3d995e5c63e6cef54ad079b",
+      "file_name": "arch/arm/lib/bootm.c",
+      "patch": "diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c\nindex 192c120a7d2..974cbfe8400 100644\n--- a/arch/arm/lib/bootm.c\n+++ b/arch/arm/lib/bootm.c\n@@ -73,11 +73,10 @@ static void announce_and_cleanup(int fake)\n \t * Call remove function of all devices with a removal flag set.\n \t * This may be useful for last-stage operations, like cancelling\n \t * of DMA operation or releasing device internal buffers.\n+\t * dm_remove_devices_active() ensures that vital devices are removed in\n+\t * a second round.\n \t */\n-\tdm_remove_devices_flags(DM_REMOVE_ACTIVE_ALL | DM_REMOVE_NON_VITAL);\n-\n-\t/* Remove all active vital devices next */\n-\tdm_remove_devices_flags(DM_REMOVE_ACTIVE_ALL);\n+\tdm_remove_devices_active();\n \n \tcleanup_before_linux();\n }"
+    },
+    {
+      "commit_id": "dabaa4ae32062cb3f3d995e5c63e6cef54ad079b",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex 55f581836df..0f79a5d5495 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -49,7 +49,7 @@ void bootm_announce_and_cleanup(void)\n \t * This may be useful for last-stage operations, like cancelling\n \t * of DMA operation or releasing device internal buffers.\n \t */\n-\tdm_remove_devices_flags(DM_REMOVE_ACTIVE_ALL);\n+\tdm_remove_devices_active();\n }\n \n #if defined(CONFIG_OF_LIBFDT) && !defined(CONFIG_OF_NO_KERNEL)"
+    },
+    {
+      "commit_id": "dabaa4ae32062cb3f3d995e5c63e6cef54ad079b",
+      "file_name": "arch/riscv/lib/bootm.c",
+      "patch": "diff --git a/arch/riscv/lib/bootm.c b/arch/riscv/lib/bootm.c\nindex 82502972eec..76c610bcee0 100644\n--- a/arch/riscv/lib/bootm.c\n+++ b/arch/riscv/lib/bootm.c\n@@ -57,7 +57,7 @@ static void announce_and_cleanup(int fake)\n \t * This may be useful for last-stage operations, like cancelling\n \t * of DMA operation or releasing device internal buffers.\n \t */\n-\tdm_remove_devices_flags(DM_REMOVE_ACTIVE_ALL);\n+\tdm_remove_devices_active();\n \n \tcleanup_before_linux();\n }"
+    }
+  ],
+  [
+    {
+      "commit_id": "ed17a33fed296a87219b0ff702045ce488bc3771",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex 2c889bcd33c..114b31012e8 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -267,7 +267,7 @@ static ulong get_sp(void)\n \treturn ret;\n }\n \n-void arch_lmb_reserve(struct lmb *lmb)\n+void arch_lmb_reserve(void)\n {\n-\tarch_lmb_reserve_generic(lmb, get_sp(), gd->ram_top, 4096);\n+\tarch_lmb_reserve_generic(get_sp(), gd->ram_top, 4096);\n }"
+    },
+    {
+      "commit_id": "ed17a33fed296a87219b0ff702045ce488bc3771",
+      "file_name": "arch/powerpc/lib/bootm.c",
+      "patch": "diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c\nindex 61e08728dd4..752f72f873f 100644\n--- a/arch/powerpc/lib/bootm.c\n+++ b/arch/powerpc/lib/bootm.c\n@@ -116,7 +116,7 @@ static void boot_jump_linux(struct bootm_headers *images)\n \treturn;\n }\n \n-void arch_lmb_reserve(struct lmb *lmb)\n+void arch_lmb_reserve(void)\n {\n \tphys_size_t bootm_size;\n \tulong size, bootmap_base;\n@@ -139,13 +139,13 @@ void arch_lmb_reserve(struct lmb *lmb)\n \t\tulong base = bootmap_base + size;\n \t\tprintf(\"WARNING: adjusting available memory from 0x%lx to 0x%llx\\n\",\n \t\t       size, (unsigned long long)bootm_size);\n-\t\tlmb_reserve(lmb, base, bootm_size - size);\n+\t\tlmb_reserve(base, bootm_size - size);\n \t}\n \n-\tarch_lmb_reserve_generic(lmb, get_sp(), gd->ram_top, 4096);\n+\tarch_lmb_reserve_generic(get_sp(), gd->ram_top, 4096);\n \n #ifdef CONFIG_MP\n-\tcpu_mp_lmb_reserve(lmb);\n+\tcpu_mp_lmb_reserve();\n #endif\n \n \treturn;\n@@ -166,7 +166,6 @@ static void boot_prep_linux(struct bootm_headers *images)\n static int boot_cmdline_linux(struct bootm_headers *images)\n {\n \tulong of_size = images->ft_len;\n-\tstruct lmb *lmb = &images->lmb;\n \tulong *cmd_start = &images->cmdline_start;\n \tulong *cmd_end = &images->cmdline_end;\n \n@@ -174,7 +173,7 @@ static int boot_cmdline_linux(struct bootm_headers *images)\n \n \tif (!of_size) {\n \t\t/* allocate space and init command line */\n-\t\tret = boot_get_cmdline (lmb, cmd_start, cmd_end);\n+\t\tret = boot_get_cmdline(cmd_start, cmd_end);\n \t\tif (ret) {\n \t\t\tputs(\"ERROR with allocation of cmdline\\n\");\n \t\t\treturn ret;\n@@ -187,14 +186,13 @@ static int boot_cmdline_linux(struct bootm_headers *images)\n static int boot_bd_t_linux(struct bootm_headers *images)\n {\n \tulong of_size = images->ft_len;\n-\tstruct lmb *lmb = &images->lmb;\n \tstruct bd_info **kbd = &images->kbd;\n \n \tint ret = 0;\n \n \tif (!of_size) {\n \t\t/* allocate space for kernel copy of board info */\n-\t\tret = boot_get_kbd (lmb, kbd);\n+\t\tret = boot_get_kbd(kbd);\n \t\tif (ret) {\n \t\t\tputs(\"ERROR with allocation of kernel bd\\n\");\n \t\t\treturn ret;"
+    },
+    {
+      "commit_id": "ed17a33fed296a87219b0ff702045ce488bc3771",
+      "file_name": "arch/riscv/lib/bootm.c",
+      "patch": "diff --git a/arch/riscv/lib/bootm.c b/arch/riscv/lib/bootm.c\nindex 13cbaaba682..bbf62f9e058 100644\n--- a/arch/riscv/lib/bootm.c\n+++ b/arch/riscv/lib/bootm.c\n@@ -142,7 +142,7 @@ static ulong get_sp(void)\n \treturn ret;\n }\n \n-void arch_lmb_reserve(struct lmb *lmb)\n+void arch_lmb_reserve(void)\n {\n-\tarch_lmb_reserve_generic(lmb, get_sp(), gd->ram_top, 4096);\n+\tarch_lmb_reserve_generic(get_sp(), gd->ram_top, 4096);\n }"
+    },
+    {
+      "commit_id": "ed17a33fed296a87219b0ff702045ce488bc3771",
+      "file_name": "arch/mips/lib/bootm.c",
+      "patch": "diff --git a/arch/mips/lib/bootm.c b/arch/mips/lib/bootm.c\nindex adb6b6cc229..8fb3a3923fd 100644\n--- a/arch/mips/lib/bootm.c\n+++ b/arch/mips/lib/bootm.c\n@@ -37,9 +37,9 @@ static ulong arch_get_sp(void)\n \treturn ret;\n }\n \n-void arch_lmb_reserve(struct lmb *lmb)\n+void arch_lmb_reserve(void)\n {\n-\tarch_lmb_reserve_generic(lmb, arch_get_sp(), gd->ram_top, 4096);\n+\tarch_lmb_reserve_generic(arch_get_sp(), gd->ram_top, 4096);\n }\n \n static void linux_cmdline_init(void)\n@@ -225,9 +225,8 @@ static int boot_reloc_fdt(struct bootm_headers *images)\n \t}\n \n #if CONFIG_IS_ENABLED(MIPS_BOOT_FDT) && CONFIG_IS_ENABLED(OF_LIBFDT)\n-\tboot_fdt_add_mem_rsv_regions(&images->lmb, images->ft_addr);\n-\treturn boot_relocate_fdt(&images->lmb, &images->ft_addr,\n-\t\t&images->ft_len);\n+\tboot_fdt_add_mem_rsv_regions(images->ft_addr);\n+\treturn boot_relocate_fdt(&images->ft_addr, &images->ft_len);\n #else\n \treturn 0;\n #endif\n@@ -248,7 +247,7 @@ static int boot_setup_fdt(struct bootm_headers *images)\n \timages->initrd_start = virt_to_phys((void *)images->initrd_start);\n \timages->initrd_end = virt_to_phys((void *)images->initrd_end);\n \n-\treturn image_setup_libfdt(images, images->ft_addr, &images->lmb);\n+\treturn image_setup_libfdt(images, images->ft_addr, true);\n }\n \n static void boot_prep_linux(struct bootm_headers *images)"
+    }
+  ],
+  [
+    {
+      "commit_id": "6534d26ee9a5217faaba8e49cbd95ce5ef107ee8",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex 114b31012e8..55f581836df 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -253,21 +253,3 @@ int do_bootm_linux(int flag, struct bootm_info *bmi)\n \n \treturn boot_jump_linux(images);\n }\n-\n-static ulong get_sp(void)\n-{\n-\tulong ret;\n-\n-#if CONFIG_IS_ENABLED(X86_64)\n-\tasm(\"mov %%rsp, %0\" : \"=r\"(ret) : );\n-#else\n-\tasm(\"mov %%esp, %0\" : \"=r\"(ret) : );\n-#endif\n-\n-\treturn ret;\n-}\n-\n-void arch_lmb_reserve(void)\n-{\n-\tarch_lmb_reserve_generic(get_sp(), gd->ram_top, 4096);\n-}"
+    },
+    {
+      "commit_id": "6534d26ee9a5217faaba8e49cbd95ce5ef107ee8",
+      "file_name": "arch/powerpc/lib/bootm.c",
+      "patch": "diff --git a/arch/powerpc/lib/bootm.c b/arch/powerpc/lib/bootm.c\nindex 8f21cdb0a5b..dc44bf3ab3a 100644\n--- a/arch/powerpc/lib/bootm.c\n+++ b/arch/powerpc/lib/bootm.c\n@@ -36,7 +36,6 @@\n \n DECLARE_GLOBAL_DATA_PTR;\n \n-static ulong get_sp (void);\n extern void ft_fixup_num_cores(void *blob);\n static void set_clocks_in_mhz (struct bd_info *kbd);\n \n@@ -210,14 +209,6 @@ int do_bootm_linux(int flag, struct bootm_info *bmi)\n \treturn 0;\n }\n \n-static ulong get_sp (void)\n-{\n-\tulong sp;\n-\n-\tasm( \"mr %0,1\": \"=r\"(sp) : );\n-\treturn sp;\n-}\n-\n static void set_clocks_in_mhz (struct bd_info *kbd)\n {\n \tchar\t*s;"
+    },
+    {
+      "commit_id": "6534d26ee9a5217faaba8e49cbd95ce5ef107ee8",
+      "file_name": "arch/riscv/lib/bootm.c",
+      "patch": "diff --git a/arch/riscv/lib/bootm.c b/arch/riscv/lib/bootm.c\nindex bbf62f9e058..82502972eec 100644\n--- a/arch/riscv/lib/bootm.c\n+++ b/arch/riscv/lib/bootm.c\n@@ -133,16 +133,3 @@ int do_bootm_vxworks(int flag, struct bootm_info *bmi)\n {\n \treturn do_bootm_linux(flag, bmi);\n }\n-\n-static ulong get_sp(void)\n-{\n-\tulong ret;\n-\n-\tasm(\"mv %0, sp\" : \"=r\"(ret) : );\n-\treturn ret;\n-}\n-\n-void arch_lmb_reserve(void)\n-{\n-\tarch_lmb_reserve_generic(get_sp(), gd->ram_top, 4096);\n-}"
+    },
+    {
+      "commit_id": "6534d26ee9a5217faaba8e49cbd95ce5ef107ee8",
+      "file_name": "arch/mips/lib/bootm.c",
+      "patch": "diff --git a/arch/mips/lib/bootm.c b/arch/mips/lib/bootm.c\nindex 8fb3a3923fd..87195100023 100644\n--- a/arch/mips/lib/bootm.c\n+++ b/arch/mips/lib/bootm.c\n@@ -9,7 +9,6 @@\n #include <env.h>\n #include <image.h>\n #include <fdt_support.h>\n-#include <lmb.h>\n #include <log.h>\n #include <asm/addrspace.h>\n #include <asm/global_data.h>\n@@ -28,20 +27,6 @@ static char **linux_env;\n static char *linux_env_p;\n static int linux_env_idx;\n \n-static ulong arch_get_sp(void)\n-{\n-\tulong ret;\n-\n-\t__asm__ __volatile__(\"move %0, $sp\" : \"=r\"(ret) : );\n-\n-\treturn ret;\n-}\n-\n-void arch_lmb_reserve(void)\n-{\n-\tarch_lmb_reserve_generic(arch_get_sp(), gd->ram_top, 4096);\n-}\n-\n static void linux_cmdline_init(void)\n {\n \tlinux_argc = 1;"
+    }
+  ],
+  [
+    {
+      "commit_id": "b8bffe661f4fac2b07cca7f32a950a6fcdec7533",
+      "file_name": "arch/x86/lib/bootm.c",
+      "patch": "diff --git a/arch/x86/lib/bootm.c b/arch/x86/lib/bootm.c\nindex eafcddfa24b..04e475bdc24 100644\n--- a/arch/x86/lib/bootm.c\n+++ b/arch/x86/lib/bootm.c\n@@ -39,7 +39,7 @@ void bootm_announce_and_cleanup(void)\n \ttimestamp_add_now(TS_START_KERNEL);\n #endif\n \tbootstage_mark_name(BOOTSTAGE_ID_BOOTM_HANDOFF, \"start_kernel\");\n-#if CONFIG_IS_ENABLED(BOOTSTAGE_REPORT)\n+#if IS_ENABLED(CONFIG_BOOTSTAGE_REPORT)\n \tbootstage_report();\n #endif\n "
+    },
+    {
+      "commit_id": "b8bffe661f4fac2b07cca7f32a950a6fcdec7533",
+      "file_name": "arch/mips/lib/bootm.c",
+      "patch": "diff --git a/arch/mips/lib/bootm.c b/arch/mips/lib/bootm.c\nindex 5687ff22cb8..ab92bd06b0e 100644\n--- a/arch/mips/lib/bootm.c\n+++ b/arch/mips/lib/bootm.c\n@@ -287,7 +287,7 @@ static void boot_jump_linux(struct bootm_headers *images)\n #if IS_ENABLED(CONFIG_BOOTSTAGE_FDT)\n \tbootstage_fdt_add_report();\n #endif\n-#if CONFIG_IS_ENABLED(BOOTSTAGE_REPORT)\n+#if IS_ENABLED(CONFIG_BOOTSTAGE_REPORT)\n \tbootstage_report();\n #endif\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "aa6e94deabb45154cea07ad44c4a5c047bca078b",
+      "file_name": "include/configs/qemu-arm.h",
+      "patch": "diff --git a/include/configs/qemu-arm.h b/include/configs/qemu-arm.h\nindex 535762ecb24..a67af73fd56 100644\n--- a/include/configs/qemu-arm.h\n+++ b/include/configs/qemu-arm.h\n@@ -10,7 +10,7 @@\n \n /* Physical memory map */\n \n-#define CONFIG_SYS_SDRAM_BASE\t\t0x40000000\n+#define CFG_SYS_SDRAM_BASE\t\t0x40000000\n \n /* GUIDs for capsule updatable firmware images */\n #define QEMU_ARM_UBOOT_IMAGE_GUID \\"
+    },
+    {
+      "commit_id": "aa6e94deabb45154cea07ad44c4a5c047bca078b",
+      "file_name": "include/configs/qemu-riscv.h",
+      "patch": "diff --git a/include/configs/qemu-riscv.h b/include/configs/qemu-riscv.h\nindex d81e5d6c862..72f35cc0542 100644\n--- a/include/configs/qemu-riscv.h\n+++ b/include/configs/qemu-riscv.h\n@@ -8,7 +8,7 @@\n \n #include <linux/sizes.h>\n \n-#define CONFIG_SYS_SDRAM_BASE\t\t0x80000000\n+#define CFG_SYS_SDRAM_BASE\t\t0x80000000\n \n #define CONFIG_STANDALONE_LOAD_ADDR\t0x80200000\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "7fe32b3442f0d0e77a0768dcc1ee65fb352a080a",
+      "file_name": "arch/x86/lib/spl.c",
+      "patch": "diff --git a/arch/x86/lib/spl.c b/arch/x86/lib/spl.c\nindex b18c1cd6092..2d50c62964c 100644\n--- a/arch/x86/lib/spl.c\n+++ b/arch/x86/lib/spl.c\n@@ -17,6 +17,7 @@\n #include <syscon.h>\n #include <asm/cpu.h>\n #include <asm/cpu_common.h>\n+#include <asm/fsp2/fsp_api.h>\n #include <asm/global_data.h>\n #include <asm/mrccache.h>\n #include <asm/mtrr.h>\n@@ -27,7 +28,7 @@\n \n DECLARE_GLOBAL_DATA_PTR;\n \n-__weak int arch_cpu_init_dm(void)\n+__weak int fsp_setup_pinctrl(void *ctx, struct event *event)\n {\n \treturn 0;\n }\n@@ -89,7 +90,7 @@ static int x86_spl_init(void)\n \t\treturn ret;\n \t}\n #ifndef CONFIG_TPL\n-\tret = arch_cpu_init_dm();\n+\tret = fsp_setup_pinctrl(NULL, NULL);\n \tif (ret) {\n \t\tdebug(\"%s: arch_cpu_init_dm() failed\\n\", __func__);\n \t\treturn ret;"
+    },
+    {
+      "commit_id": "7fe32b3442f0d0e77a0768dcc1ee65fb352a080a",
+      "file_name": "arch/riscv/lib/spl.c",
+      "patch": "diff --git a/arch/riscv/lib/spl.c b/arch/riscv/lib/spl.c\nindex 8baee07beac..f4d3b67e5dd 100644\n--- a/arch/riscv/lib/spl.c\n+++ b/arch/riscv/lib/spl.c\n@@ -11,6 +11,7 @@\n #include <spl.h>\n #include <asm/global_data.h>\n #include <asm/smp.h>\n+#include <asm/system.h>\n \n DECLARE_GLOBAL_DATA_PTR;\n \n@@ -27,7 +28,7 @@ __weak void board_init_f(ulong dummy)\n \tif (ret)\n \t\tpanic(\"spl_early_init() failed: %d\\n\", ret);\n \n-\tarch_cpu_init_dm();\n+\triscv_cpu_setup(NULL, NULL);\n \n \tpreloader_console_init();\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "bef9fdbed2e525ce9264d2ae2fbcb37db7472052",
+      "file_name": "arch/arm/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/arm/include/asm/fsl_secure_boot.h b/arch/arm/include/asm/fsl_secure_boot.h\nindex 15627c96e90..382a6d420a2 100644\n--- a/arch/arm/include/asm/fsl_secure_boot.h\n+++ b/arch/arm/include/asm/fsl_secure_boot.h\n@@ -8,8 +8,8 @@\n #define __FSL_SECURE_BOOT_H\n \n #ifdef CONFIG_CHAIN_OF_TRUST\n-#ifndef CONFIG_SPL_BUILD\n+#ifndef CONFIG_XPL_BUILD\n \n-#endif /* #ifndef CONFIG_SPL_BUILD */\n+#endif /* #ifndef CONFIG_XPL_BUILD */\n #endif /* #ifdef CONFIG_CHAIN_OF_TRUST */\n #endif"
+    },
+    {
+      "commit_id": "bef9fdbed2e525ce9264d2ae2fbcb37db7472052",
+      "file_name": "arch/powerpc/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/fsl_secure_boot.h b/arch/powerpc/include/asm/fsl_secure_boot.h\nindex 221f9d842a8..f12830984c6 100644\n--- a/arch/powerpc/include/asm/fsl_secure_boot.h\n+++ b/arch/powerpc/include/asm/fsl_secure_boot.h\n@@ -36,7 +36,7 @@\n #endif /* #ifdef CONFIG_NXP_ESBC */\n \n #ifdef CONFIG_CHAIN_OF_TRUST\n-#ifdef CONFIG_SPL_BUILD\n+#ifdef CONFIG_XPL_BUILD\n /*\n  * PPAACT and SPAACT table for PAMU must be placed on DDR after DDR init\n  * due to space crunch on CPC and thus malloc will not work.\n@@ -45,10 +45,10 @@\n #define CFG_SPL_SPAACT_ADDR\t\t0x2f000000\n #define CFG_SPL_JR0_LIODN_S\t\t454\n #define CFG_SPL_JR0_LIODN_NS\t\t458\n-#endif /* ifdef CONFIG_SPL_BUILD */\n+#endif /* ifdef CONFIG_XPL_BUILD */\n \n-#ifndef CONFIG_SPL_BUILD\n+#ifndef CONFIG_XPL_BUILD\n #include <config_fsl_chain_trust.h>\n-#endif /* #ifndef CONFIG_SPL_BUILD */\n+#endif /* #ifndef CONFIG_XPL_BUILD */\n #endif /* #ifdef CONFIG_CHAIN_OF_TRUST */\n #endif"
+    }
+  ],
+  [
+    {
+      "commit_id": "bb20a105e9fa475eb4258086cf59173540e7ff23",
+      "file_name": "arch/arm/include/asm/config.h",
+      "patch": "diff --git a/arch/arm/include/asm/config.h b/arch/arm/include/asm/config.h\nindex be44b767642..5870412c439 100644\n--- a/arch/arm/include/asm/config.h\n+++ b/arch/arm/include/asm/config.h\n@@ -6,8 +6,6 @@\n #ifndef _ASM_CONFIG_H_\n #define _ASM_CONFIG_H_\n \n-#define CONFIG_SYS_BOOT_RAMDISK_HIGH\n-\n #if defined(CONFIG_ARCH_LS1021A) || \\\n \tdefined(CONFIG_FSL_LAYERSCAPE)\n #include <asm/arch/config.h>"
+    },
+    {
+      "commit_id": "bb20a105e9fa475eb4258086cf59173540e7ff23",
+      "file_name": "arch/x86/include/asm/config.h",
+      "patch": "diff --git a/arch/x86/include/asm/config.h b/arch/x86/include/asm/config.h\nindex 221eb93d58b..bad0026648a 100644\n--- a/arch/x86/include/asm/config.h\n+++ b/arch/x86/include/asm/config.h\n@@ -6,6 +6,4 @@\n #ifndef _ASM_CONFIG_H_\n #define _ASM_CONFIG_H_\n \n-#define CONFIG_SYS_BOOT_RAMDISK_HIGH\n-\n #endif"
+    },
+    {
+      "commit_id": "bb20a105e9fa475eb4258086cf59173540e7ff23",
+      "file_name": "arch/powerpc/include/asm/config.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/config.h b/arch/powerpc/include/asm/config.h\nindex 059ffe1fd4f..79fe567b587 100644\n--- a/arch/powerpc/include/asm/config.h\n+++ b/arch/powerpc/include/asm/config.h\n@@ -14,8 +14,6 @@\n   #define HWCONFIG_BUFFER_SIZE 256\n #endif\n \n-#define CONFIG_SYS_BOOT_RAMDISK_HIGH\n-\n #ifndef CONFIG_MAX_MEM_MAPPED\n #if\tdefined(CONFIG_E500)\t\t|| \\\n \tdefined(CONFIG_MPC86xx)\t\t|| \\"
+    },
+    {
+      "commit_id": "bb20a105e9fa475eb4258086cf59173540e7ff23",
+      "file_name": "arch/riscv/include/asm/config.h",
+      "patch": "diff --git a/arch/riscv/include/asm/config.h b/arch/riscv/include/asm/config.h\nindex d9110075376..c55c85d4e6c 100644\n--- a/arch/riscv/include/asm/config.h\n+++ b/arch/riscv/include/asm/config.h\n@@ -7,6 +7,4 @@\n #ifndef _ASM_CONFIG_H_\n #define _ASM_CONFIG_H_\n \n-#define CONFIG_SYS_BOOT_RAMDISK_HIGH\n-\n #endif"
+    },
+    {
+      "commit_id": "bb20a105e9fa475eb4258086cf59173540e7ff23",
+      "file_name": "arch/mips/include/asm/config.h",
+      "patch": "diff --git a/arch/mips/include/asm/config.h b/arch/mips/include/asm/config.h\nindex 221eb93d58b..bad0026648a 100644\n--- a/arch/mips/include/asm/config.h\n+++ b/arch/mips/include/asm/config.h\n@@ -6,6 +6,4 @@\n #ifndef _ASM_CONFIG_H_\n #define _ASM_CONFIG_H_\n \n-#define CONFIG_SYS_BOOT_RAMDISK_HIGH\n-\n #endif"
+    }
+  ],
+  [
+    {
+      "commit_id": "601483ffd544f98023062949670e2aa048d31cc7",
+      "file_name": "arch/arm/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/arm/include/asm/fsl_secure_boot.h b/arch/arm/include/asm/fsl_secure_boot.h\nindex d6a7c3dcbd7..09c88841e0c 100644\n--- a/arch/arm/include/asm/fsl_secure_boot.h\n+++ b/arch/arm/include/asm/fsl_secure_boot.h\n@@ -21,8 +21,6 @@\n #define CONFIG_SPL_UBOOT_KEY_HASH\tNULL\n #endif /* ifdef CONFIG_SPL_BUILD */\n \n-#define CONFIG_KEY_REVOCATION\n-\n #ifndef CONFIG_SPL_BUILD\n #ifndef CONFIG_SYS_RAMBOOT\n /* The key used for verification of next level images"
+    },
+    {
+      "commit_id": "601483ffd544f98023062949670e2aa048d31cc7",
+      "file_name": "arch/powerpc/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/fsl_secure_boot.h b/arch/powerpc/include/asm/fsl_secure_boot.h\nindex e073025ebfb..9ae4c590f1d 100644\n--- a/arch/powerpc/include/asm/fsl_secure_boot.h\n+++ b/arch/powerpc/include/asm/fsl_secure_boot.h\n@@ -31,7 +31,6 @@\n #ifndef CONFIG_SYS_RAMBOOT\n #define CONFIG_SYS_CPC_REINIT_F\n #endif\n-#define CONFIG_KEY_REVOCATION\n #undef CONFIG_SYS_INIT_L3_ADDR\n #define CONFIG_SYS_INIT_L3_ADDR\t\t\t0xbff00000\n #endif\n@@ -47,10 +46,6 @@\n #endif\n #endif\n \n-#if defined(CONFIG_TARGET_C29XPCIE)\n-#define CONFIG_KEY_REVOCATION\n-#endif\n-\n #if defined(CONFIG_ARCH_P3041)\t||\t\\\n \tdefined(CONFIG_ARCH_P4080) ||\t\\\n \tdefined(CONFIG_ARCH_P5040) ||\t\\"
+    }
+  ],
+  [
+    {
+      "commit_id": "c9f85187e21ef64f65c1cd7202ef9199501a6f4d",
+      "file_name": "arch/arm/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/arm/include/asm/fsl_secure_boot.h b/arch/arm/include/asm/fsl_secure_boot.h\nindex 154663e192c..d6a7c3dcbd7 100644\n--- a/arch/arm/include/asm/fsl_secure_boot.h\n+++ b/arch/arm/include/asm/fsl_secure_boot.h\n@@ -8,8 +8,6 @@\n #define __FSL_SECURE_BOOT_H\n \n #ifdef CONFIG_CHAIN_OF_TRUST\n-#define CONFIG_FSL_SEC_MON\n-\n #ifdef CONFIG_SPL_BUILD\n /*\n  * Define the key hash for U-Boot here if public/private key pair used to"
+    },
+    {
+      "commit_id": "c9f85187e21ef64f65c1cd7202ef9199501a6f4d",
+      "file_name": "arch/powerpc/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/fsl_secure_boot.h b/arch/powerpc/include/asm/fsl_secure_boot.h\nindex 3a1d858ec64..e073025ebfb 100644\n--- a/arch/powerpc/include/asm/fsl_secure_boot.h\n+++ b/arch/powerpc/include/asm/fsl_secure_boot.h\n@@ -92,8 +92,6 @@\n #define CONFIG_SPL_UBOOT_KEY_HASH\tNULL\n #endif /* ifdef CONFIG_SPL_BUILD */\n \n-#define CONFIG_FSL_SEC_MON\n-\n #ifndef CONFIG_SPL_BUILD\n /*\n  * fsl_setenv_chain_of_trust() must be called from"
+    }
+  ],
+  [
+    {
+      "commit_id": "3a581af21af0bceb7e47650a19e3ddd3de87148a",
+      "file_name": "arch/arm/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/arm/include/asm/fsl_secure_boot.h b/arch/arm/include/asm/fsl_secure_boot.h\nindex a4f4961fc87..6a9d198cb81 100644\n--- a/arch/arm/include/asm/fsl_secure_boot.h\n+++ b/arch/arm/include/asm/fsl_secure_boot.h\n@@ -9,21 +9,6 @@\n \n #ifdef CONFIG_CHAIN_OF_TRUST\n #ifndef CONFIG_SPL_BUILD\n-#ifndef CONFIG_SYS_RAMBOOT\n-/* The key used for verification of next level images\n- * is picked up from an Extension Table which has\n- * been verified by the ISBC (Internal Secure boot Code)\n- * in boot ROM of the SoC.\n- * The feature is only applicable in case of NOR boot and is\n- * not applicable in case of RAMBOOT (NAND, SD, SPI).\n- * For LS, this feature is available for all device if IE Table\n- * is copied to XIP memory\n- * Also, for LS, ISBC doesn't verify this table.\n- */\n-#define CONFIG_FSL_ISBC_KEY_EXT\n-\n-#endif\n-\n #ifdef CONFIG_FSL_LS_PPA\n /* Define the key hash here if SRK used for signing PPA image is\n  * different from SRK hash put in SFP used for U-Boot."
+    },
+    {
+      "commit_id": "3a581af21af0bceb7e47650a19e3ddd3de87148a",
+      "file_name": "arch/powerpc/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/fsl_secure_boot.h b/arch/powerpc/include/asm/fsl_secure_boot.h\nindex e8b26802062..09f37ec3e49 100644\n--- a/arch/powerpc/include/asm/fsl_secure_boot.h\n+++ b/arch/powerpc/include/asm/fsl_secure_boot.h\n@@ -35,24 +35,6 @@\n #define CFG_SYS_INIT_L3_ADDR\t\t0xbff00000\n #endif\n #endif\n-\n-#if defined(CONFIG_ARCH_P3041)\t||\t\\\n-\tdefined(CONFIG_ARCH_P4080) ||\t\\\n-\tdefined(CONFIG_ARCH_P5040) ||\t\\\n-\tdefined(CONFIG_ARCH_P2041)\n-\t#define\tCONFIG_FSL_TRUST_ARCH_v1\n-#endif\n-\n-#if defined(CONFIG_FSL_CORENET) && !defined(CONFIG_SYS_RAMBOOT)\n-/* The key used for verification of next level images\n- * is picked up from an Extension Table which has\n- * been verified by the ISBC (Internal Secure boot Code)\n- * in boot ROM of the SoC.\n- * The feature is only applicable in case of NOR boot and is\n- * not applicable in case of RAMBOOT (NAND, SD, SPI).\n- */\n-#define CONFIG_FSL_ISBC_KEY_EXT\n-#endif\n #endif /* #ifdef CONFIG_NXP_ESBC */\n \n #ifdef CONFIG_CHAIN_OF_TRUST"
+    }
+  ],
+  [
+    {
+      "commit_id": "5aad0a14bacc22b9d36956f12fa9480e3c0c672f",
+      "file_name": "arch/arm/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/arm/include/asm/fsl_secure_boot.h b/arch/arm/include/asm/fsl_secure_boot.h\nindex 09c88841e0c..9c9e1dab9a4 100644\n--- a/arch/arm/include/asm/fsl_secure_boot.h\n+++ b/arch/arm/include/asm/fsl_secure_boot.h\n@@ -8,19 +8,6 @@\n #define __FSL_SECURE_BOOT_H\n \n #ifdef CONFIG_CHAIN_OF_TRUST\n-#ifdef CONFIG_SPL_BUILD\n-/*\n- * Define the key hash for U-Boot here if public/private key pair used to\n- * sign U-boot are different from the SRK hash put in the fuse\n- * Example of defining KEY_HASH is\n- * #define CONFIG_SPL_UBOOT_KEY_HASH \\\n- *      \"41066b564c6ffcef40ccbc1e0a5d0d519604000c785d97bbefd25e4d288d1c8b\"\n- * else leave it defined as NULL\n- */\n-\n-#define CONFIG_SPL_UBOOT_KEY_HASH\tNULL\n-#endif /* ifdef CONFIG_SPL_BUILD */\n-\n #ifndef CONFIG_SPL_BUILD\n #ifndef CONFIG_SYS_RAMBOOT\n /* The key used for verification of next level images"
+    },
+    {
+      "commit_id": "5aad0a14bacc22b9d36956f12fa9480e3c0c672f",
+      "file_name": "arch/powerpc/include/asm/fsl_secure_boot.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/fsl_secure_boot.h b/arch/powerpc/include/asm/fsl_secure_boot.h\nindex 9ae4c590f1d..c062fa5c191 100644\n--- a/arch/powerpc/include/asm/fsl_secure_boot.h\n+++ b/arch/powerpc/include/asm/fsl_secure_boot.h\n@@ -75,16 +75,6 @@\n #define CONFIG_SPL_SPAACT_ADDR\t\t0x2f000000\n #define CONFIG_SPL_JR0_LIODN_S\t\t454\n #define CONFIG_SPL_JR0_LIODN_NS\t\t458\n-/*\n- * Define the key hash for U-Boot here if public/private key pair used to\n- * sign U-boot are different from the SRK hash put in the fuse\n- * Example of defining KEY_HASH is\n- * #define CONFIG_SPL_UBOOT_KEY_HASH \\\n- *      \"41066b564c6ffcef40ccbc1e0a5d0d519604000c785d97bbefd25e4d288d1c8b\"\n- * else leave it defined as NULL\n- */\n-\n-#define CONFIG_SPL_UBOOT_KEY_HASH\tNULL\n #endif /* ifdef CONFIG_SPL_BUILD */\n \n #ifndef CONFIG_SPL_BUILD"
+    }
+  ],
+  [
+    {
+      "commit_id": "50834884a8159845475fdc28ac196a41fe4d4915",
+      "file_name": "arch/arm/include/asm/global_data.h",
+      "patch": "diff --git a/arch/arm/include/asm/global_data.h b/arch/arm/include/asm/global_data.h\nindex 2a222c53882..b385bae0266 100644\n--- a/arch/arm/include/asm/global_data.h\n+++ b/arch/arm/include/asm/global_data.h\n@@ -102,6 +102,9 @@ struct arch_global_data {\n #ifdef CONFIG_ARCH_IMX8ULP\n \tbool m33_handshake_done;\n #endif\n+#ifdef CONFIG_SMBIOS\n+\tulong smbios_start;\t\t/* Start address of SMBIOS table */\n+#endif\n };\n \n #include <asm-generic/global_data.h>"
+    },
+    {
+      "commit_id": "50834884a8159845475fdc28ac196a41fe4d4915",
+      "file_name": "arch/x86/include/asm/global_data.h",
+      "patch": "diff --git a/arch/x86/include/asm/global_data.h b/arch/x86/include/asm/global_data.h\nindex ea58259ad77..6f4a7130f1d 100644\n--- a/arch/x86/include/asm/global_data.h\n+++ b/arch/x86/include/asm/global_data.h\n@@ -127,6 +127,7 @@ struct arch_global_data {\n \tulong table_end;\t\t/* End address of x86 tables */\n \tulong table_start_high;\t\t/* Start address of high x86 tables */\n \tulong table_end_high;\t\t/* End address of high x86 tables */\n+\tulong smbios_start;\t\t/* Start address of SMBIOS table */\n };\n \n #endif"
+    },
+    {
+      "commit_id": "50834884a8159845475fdc28ac196a41fe4d4915",
+      "file_name": "arch/riscv/include/asm/global_data.h",
+      "patch": "diff --git a/arch/riscv/include/asm/global_data.h b/arch/riscv/include/asm/global_data.h\nindex 9d97517e124..937fa4d1544 100644\n--- a/arch/riscv/include/asm/global_data.h\n+++ b/arch/riscv/include/asm/global_data.h\n@@ -32,6 +32,9 @@ struct arch_global_data {\n \tulong available_harts;\n #endif\n #endif\n+#ifdef CONFIG_SMBIOS\n+\tulong smbios_start;\t\t/* Start address of SMBIOS table */\n+#endif\n };\n \n #include <asm-generic/global_data.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "071cf2767f832ec89eff40a476903d4ac5240dcf",
+      "file_name": "arch/x86/include/asm/global_data.h",
+      "patch": "diff --git a/arch/x86/include/asm/global_data.h b/arch/x86/include/asm/global_data.h\nindex 6f4a7130f1d..1ef7f1f0349 100644\n--- a/arch/x86/include/asm/global_data.h\n+++ b/arch/x86/include/asm/global_data.h\n@@ -9,6 +9,7 @@\n \n #ifndef __ASSEMBLY__\n \n+#include <linux/types.h>\n #include <asm/processor.h>\n #include <asm/mrccache.h>\n "
+    },
+    {
+      "commit_id": "071cf2767f832ec89eff40a476903d4ac5240dcf",
+      "file_name": "arch/powerpc/include/asm/global_data.h",
+      "patch": "diff --git a/arch/powerpc/include/asm/global_data.h b/arch/powerpc/include/asm/global_data.h\nindex 43d71f5caec..f7860122a00 100644\n--- a/arch/powerpc/include/asm/global_data.h\n+++ b/arch/powerpc/include/asm/global_data.h\n@@ -8,7 +8,6 @@\n #ifndef\t__ASM_GBL_DATA_H\n #define __ASM_GBL_DATA_H\n \n-#include <config.h>\n #include <linux/types.h>\n \n /* Architecture-specific global data */"
+    },
+    {
+      "commit_id": "071cf2767f832ec89eff40a476903d4ac5240dcf",
+      "file_name": "arch/riscv/include/asm/global_data.h",
+      "patch": "diff --git a/arch/riscv/include/asm/global_data.h b/arch/riscv/include/asm/global_data.h\nindex 937fa4d1544..d00247ad953 100644\n--- a/arch/riscv/include/asm/global_data.h\n+++ b/arch/riscv/include/asm/global_data.h\n@@ -10,6 +10,7 @@\n #ifndef\t__ASM_GBL_DATA_H\n #define __ASM_GBL_DATA_H\n \n+#include <linux/types.h>\n #include <asm/smp.h>\n #include <asm/u-boot.h>\n #include <compiler.h>"
+    },
+    {
+      "commit_id": "071cf2767f832ec89eff40a476903d4ac5240dcf",
+      "file_name": "arch/mips/include/asm/global_data.h",
+      "patch": "diff --git a/arch/mips/include/asm/global_data.h b/arch/mips/include/asm/global_data.h\nindex f0d3b07bf1e..34b7e0bed94 100644\n--- a/arch/mips/include/asm/global_data.h\n+++ b/arch/mips/include/asm/global_data.h\n@@ -7,8 +7,8 @@\n #ifndef\t__ASM_GBL_DATA_H\n #define __ASM_GBL_DATA_H\n \n+#include <linux/types.h>\n #include <asm/regdef.h>\n-#include <asm/types.h>\n \n struct octeon_eeprom_mac_addr {\n \tu8 mac_addr_base[6];"
+    }
+  ],
+  [
+    {
+      "commit_id": "17e476aa0525905c52e48c19adcb54fdca60d48b",
+      "file_name": "arch/arm/include/asm/system.h",
+      "patch": "diff --git a/arch/arm/include/asm/system.h b/arch/arm/include/asm/system.h\nindex 9eb30c2ade8..52f6c9b934d 100644\n--- a/arch/arm/include/asm/system.h\n+++ b/arch/arm/include/asm/system.h\n@@ -665,22 +665,6 @@ void mmu_set_region_dcache_behaviour_phys(phys_addr_t virt, phys_addr_t phys,\n void mmu_set_region_dcache_behaviour(phys_addr_t start, size_t size,\n \t\t\t\t     enum dcache_option option);\n \n-#ifdef CONFIG_SYS_NONCACHED_MEMORY\n-/**\n- * noncached_init() - Initialize non-cached memory region\n- *\n- * Initialize non-cached memory area. This memory region will be typically\n- * located right below the malloc() area and mapped uncached in the MMU.\n- *\n- * It is called during the generic post-relocation init sequence.\n- *\n- * Return: 0 if OK\n- */\n-int noncached_init(void);\n-\n-phys_addr_t noncached_alloc(size_t size, size_t align);\n-#endif /* CONFIG_SYS_NONCACHED_MEMORY */\n-\n #endif /* __ASSEMBLY__ */\n \n #endif"
+    },
+    {
+      "commit_id": "17e476aa0525905c52e48c19adcb54fdca60d48b",
+      "file_name": "arch/mips/include/asm/system.h",
+      "patch": "diff --git a/arch/mips/include/asm/system.h b/arch/mips/include/asm/system.h\nindex 89a2ac209fc..00699c4c11a 100644\n--- a/arch/mips/include/asm/system.h\n+++ b/arch/mips/include/asm/system.h\n@@ -286,20 +286,6 @@ static inline void instruction_hazard_barrier(void)\n /* 1MB granularity */\n #define MMU_SECTION_SHIFT\t20\n #define MMU_SECTION_SIZE\t(1 << MMU_SECTION_SHIFT)\n-\n-/**\n- * noncached_init() - Initialize non-cached memory region\n- *\n- * Initialize non-cached memory area. This memory region will be typically\n- * located right below the malloc() area and be accessed from KSEG1.\n- *\n- * It is called during the generic post-relocation init sequence.\n- *\n- * Return: 0 if OK\n- */\n-int noncached_init(void);\n-\n-phys_addr_t noncached_alloc(size_t size, size_t align);\n #endif /* CONFIG_SYS_NONCACHED_MEMORY */\n \n #endif /* _ASM_SYSTEM_H */"
+    }
+  ],
+  [
+    {
+      "commit_id": "2f6a5bd8a48128e76b83ab01034bb95338354e95",
+      "file_name": "board/emulation/qemu-arm/qemu-arm.c",
+      "patch": "diff --git a/board/emulation/qemu-arm/qemu-arm.c b/board/emulation/qemu-arm/qemu-arm.c\nindex ecfd19f1a7e..6095cb02b23 100644\n--- a/board/emulation/qemu-arm/qemu-arm.c\n+++ b/board/emulation/qemu-arm/qemu-arm.c\n@@ -3,7 +3,7 @@\n  * Copyright (c) 2017 Tuomas Tynkkynen\n  */\n \n-#include <common.h>\n+#include <config.h>\n #include <cpu_func.h>\n #include <dm.h>\n #include <efi.h>"
+    },
+    {
+      "commit_id": "2f6a5bd8a48128e76b83ab01034bb95338354e95",
+      "file_name": "board/emulation/qemu-riscv/qemu-riscv.c",
+      "patch": "diff --git a/board/emulation/qemu-riscv/qemu-riscv.c b/board/emulation/qemu-riscv/qemu-riscv.c\nindex 173245b40e3..e5193e31e37 100644\n--- a/board/emulation/qemu-riscv/qemu-riscv.c\n+++ b/board/emulation/qemu-riscv/qemu-riscv.c\n@@ -3,7 +3,6 @@\n  * Copyright (C) 2018, Bin Meng <bmeng.cn@gmail.com>\n  */\n \n-#include <common.h>\n #include <dm.h>\n #include <dm/ofnode.h>\n #include <env.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "fc37a73e667916e15e01e0f9d189da792df2b351",
+      "file_name": "board/emulation/qemu-arm/qemu-arm.c",
+      "patch": "diff --git a/board/emulation/qemu-arm/qemu-arm.c b/board/emulation/qemu-arm/qemu-arm.c\nindex e0e18b4dfea..31f5a775137 100644\n--- a/board/emulation/qemu-arm/qemu-arm.c\n+++ b/board/emulation/qemu-arm/qemu-arm.c\n@@ -149,11 +149,12 @@ int dram_init_banksize(void)\n \treturn 0;\n }\n \n-void *board_fdt_blob_setup(int *err)\n+int board_fdt_blob_setup(void **fdtp)\n {\n-\t*err = 0;\n \t/* QEMU loads a generated DTB for us at the start of RAM. */\n-\treturn (void *)CFG_SYS_SDRAM_BASE;\n+\t*fdtp = (void *)CFG_SYS_SDRAM_BASE;\n+\n+\treturn 0;\n }\n \n void enable_caches(void)"
+    },
+    {
+      "commit_id": "fc37a73e667916e15e01e0f9d189da792df2b351",
+      "file_name": "board/emulation/qemu-riscv/qemu-riscv.c",
+      "patch": "diff --git a/board/emulation/qemu-riscv/qemu-riscv.c b/board/emulation/qemu-riscv/qemu-riscv.c\nindex e5193e31e37..a90222ea6a4 100644\n--- a/board/emulation/qemu-riscv/qemu-riscv.c\n+++ b/board/emulation/qemu-riscv/qemu-riscv.c\n@@ -64,9 +64,10 @@ int board_fit_config_name_match(const char *name)\n }\n #endif\n \n-void *board_fdt_blob_setup(int *err)\n+int board_fdt_blob_setup(void **fdtp)\n {\n-\t*err = 0;\n \t/* Stored the DTB address there during our init */\n-\treturn (void *)(ulong)gd->arch.firmware_fdt_addr;\n+\t*fdtp = (void *)(ulong)gd->arch.firmware_fdt_addr;\n+\n+\treturn 0;\n }"
+    }
+  ],
+  [
+    {
+      "commit_id": "9a49f393e4d3f4e83a75bf51e8fd49a3fb615d7b",
+      "file_name": "cmd/arm/exception.c",
+      "patch": "diff --git a/cmd/arm/exception.c b/cmd/arm/exception.c\nindex 522f6dff53f..98a9795b68c 100644\n--- a/cmd/arm/exception.c\n+++ b/cmd/arm/exception.c\n@@ -5,7 +5,6 @@\n  * Copyright (c) 2018, Heinrich Schuchardt <xypron.glpk@gmx.de>\n  */\n \n-#include <common.h>\n #include <command.h>\n \n static int do_unaligned(struct cmd_tbl *cmdtp, int flag, int argc,"
+    },
+    {
+      "commit_id": "9a49f393e4d3f4e83a75bf51e8fd49a3fb615d7b",
+      "file_name": "cmd/x86/exception.c",
+      "patch": "diff --git a/cmd/x86/exception.c b/cmd/x86/exception.c\nindex 82faaa913e5..14b6bd6f493 100644\n--- a/cmd/x86/exception.c\n+++ b/cmd/x86/exception.c\n@@ -5,7 +5,6 @@\n  * Copyright (c) 2018, Heinrich Schuchardt <xypron.glpk@gmx.de>\n  */\n \n-#include <common.h>\n #include <command.h>\n \n static int do_undefined(struct cmd_tbl *cmdtp, int flag, int argc,"
+    },
+    {
+      "commit_id": "9a49f393e4d3f4e83a75bf51e8fd49a3fb615d7b",
+      "file_name": "cmd/riscv/exception.c",
+      "patch": "diff --git a/cmd/riscv/exception.c b/cmd/riscv/exception.c\nindex f38f454a0b1..14ad6c440a5 100644\n--- a/cmd/riscv/exception.c\n+++ b/cmd/riscv/exception.c\n@@ -5,7 +5,6 @@\n  * Copyright (c) 2018, Heinrich Schuchardt <xypron.glpk@gmx.de>\n  */\n \n-#include <common.h>\n #include <command.h>\n \n static int do_compressed(struct cmd_tbl *cmdtp, int flag, int argc,"
+    }
+  ],
+  [
+    {
+      "commit_id": "b85ecb276bee4ef828852e75e9932638b48042dd",
+      "file_name": "cmd/arm/exception.c",
+      "patch": "diff --git a/cmd/arm/exception.c b/cmd/arm/exception.c\nindex 98a9795b68c..8857f121604 100644\n--- a/cmd/arm/exception.c\n+++ b/cmd/arm/exception.c\n@@ -49,12 +49,11 @@ static struct cmd_tbl cmd_sub[] = {\n \t\t\t \"\", \"\"),\n };\n \n-static char exception_help_text[] =\n+U_BOOT_LONGHELP(exception,\n \t\"<ex>\\n\"\n \t\"  The following exceptions are available:\\n\"\n \t\"  breakpoint - prefetch abort\\n\"\n \t\"  unaligned  - data abort\\n\"\n-\t\"  undefined  - undefined instruction\\n\"\n-\t;\n+\t\"  undefined  - undefined instruction\\n\");\n \n #include <exception.h>"
+    },
+    {
+      "commit_id": "b85ecb276bee4ef828852e75e9932638b48042dd",
+      "file_name": "cmd/x86/exception.c",
+      "patch": "diff --git a/cmd/x86/exception.c b/cmd/x86/exception.c\nindex 14b6bd6f493..02735494a3c 100644\n--- a/cmd/x86/exception.c\n+++ b/cmd/x86/exception.c\n@@ -19,10 +19,9 @@ static struct cmd_tbl cmd_sub[] = {\n \t\t\t \"\", \"\"),\n };\n \n-static char exception_help_text[] =\n+U_BOOT_LONGHELP(exception,\n \t\"<ex>\\n\"\n \t\"  The following exceptions are available:\\n\"\n-\t\"  undefined  - undefined instruction\\n\"\n-\t;\n+\t\"  undefined  - undefined instruction\\n\");\n \n #include <exception.h>"
+    },
+    {
+      "commit_id": "b85ecb276bee4ef828852e75e9932638b48042dd",
+      "file_name": "cmd/riscv/exception.c",
+      "patch": "diff --git a/cmd/riscv/exception.c b/cmd/riscv/exception.c\nindex 14ad6c440a5..2b58b1c449c 100644\n--- a/cmd/riscv/exception.c\n+++ b/cmd/riscv/exception.c\n@@ -68,14 +68,13 @@ static struct cmd_tbl cmd_sub[] = {\n \t\t\t \"\", \"\"),\n };\n \n-static char exception_help_text[] =\n+U_BOOT_LONGHELP(exception,\n \t\"<ex>\\n\"\n \t\"  The following exceptions are available:\\n\"\n \t\"  compressed - compressed instruction\\n\"\n \t\"  ebreak     - breakpoint\\n\"\n \t\"  ialign16   - 16 bit aligned instruction\\n\"\n \t\"  undefined  - illegal instruction\\n\"\n-\t\"  unaligned  - load address misaligned\\n\"\n-\t;\n+\t\"  unaligned  - load address misaligned\\n\");\n \n #include <exception.h>"
+    }
+  ],
+  [
+    {
+      "commit_id": "dbe9334e5125efcf8a825e7c5c924e2780e609e3",
+      "file_name": "dts/upstream/include/dt-bindings/interrupt-controller/arm-gic.h",
+      "patch": "diff --cc dts/upstream/include/dt-bindings/interrupt-controller/arm-gic.h\nindex 00000000000,00000000000..35b6f69b7db\nnew file mode 100644\n--- /dev/null\n+++ b/dts/upstream/include/dt-bindings/interrupt-controller/arm-gic.h\n@@@ -1,0 -1,0 +1,23 @@@\n++/* SPDX-License-Identifier: GPL-2.0 OR MIT */\n++/*\n++ * This header provides constants for the ARM GIC.\n++ */\n++\n++#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_ARM_GIC_H\n++#define _DT_BINDINGS_INTERRUPT_CONTROLLER_ARM_GIC_H\n++\n++#include <dt-bindings/interrupt-controller/irq.h>\n++\n++/* interrupt specifier cell 0 */\n++\n++#define GIC_SPI 0\n++#define GIC_PPI 1\n++\n++/*\n++ * Interrupt specifier cell 2.\n++ * The flags in irq.h are valid, plus those below.\n++ */\n++#define GIC_CPU_MASK_RAW(x) ((x) << 8)\n++#define GIC_CPU_MASK_SIMPLE(num) GIC_CPU_MASK_RAW((1 << (num)) - 1)\n++\n++#endif"
+    },
+    {
+      "commit_id": "dbe9334e5125efcf8a825e7c5c924e2780e609e3",
+      "file_name": "dts/upstream/include/dt-bindings/interrupt-controller/mips-gic.h",
+      "patch": "diff --cc dts/upstream/include/dt-bindings/interrupt-controller/mips-gic.h\nindex 00000000000,00000000000..bd45cee0c3f\nnew file mode 100644\n--- /dev/null\n+++ b/dts/upstream/include/dt-bindings/interrupt-controller/mips-gic.h\n@@@ -1,0 -1,0 +1,10 @@@\n++/* SPDX-License-Identifier: GPL-2.0 */\n++#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_MIPS_GIC_H\n++#define _DT_BINDINGS_INTERRUPT_CONTROLLER_MIPS_GIC_H\n++\n++#include <dt-bindings/interrupt-controller/irq.h>\n++\n++#define GIC_SHARED 0\n++#define GIC_LOCAL 1\n++\n++#endif"
+    }
+  ],
+  [
+    {
+      "commit_id": "eaf6ea6a1dc10d49cdcbcad0f8b0abb6c1eb1db1",
+      "file_name": "include/configs/qemu-arm.h",
+      "patch": "diff --git a/include/configs/qemu-arm.h b/include/configs/qemu-arm.h\nindex c0b5731e0e1..14cae43db3a 100644\n--- a/include/configs/qemu-arm.h\n+++ b/include/configs/qemu-arm.h\n@@ -12,9 +12,6 @@\n \n #define CONFIG_SYS_SDRAM_BASE\t\t0x40000000\n \n-/* The DTB generated by QEMU is placed at start of RAM, stay away from there */\n-#define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_SDRAM_BASE + SZ_2M)\n-\n #define CONFIG_SYS_BOOTM_LEN\t\tSZ_64M\n \n /* GUIDs for capsule updatable firmware images */"
+    },
+    {
+      "commit_id": "eaf6ea6a1dc10d49cdcbcad0f8b0abb6c1eb1db1",
+      "file_name": "include/configs/qemu-riscv.h",
+      "patch": "diff --git a/include/configs/qemu-riscv.h b/include/configs/qemu-riscv.h\nindex 69d92e643a5..15e8ae922e4 100644\n--- a/include/configs/qemu-riscv.h\n+++ b/include/configs/qemu-riscv.h\n@@ -17,7 +17,6 @@\n #endif\n \n #define CONFIG_SYS_SDRAM_BASE\t\t0x80000000\n-#define CONFIG_SYS_INIT_SP_ADDR\t\t(CONFIG_SYS_SDRAM_BASE + SZ_2M)\n \n #define CONFIG_SYS_BOOTM_LEN\t\tSZ_64M\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "0f9595b9fa68ed1634adddf989fd037909eec433",
+      "file_name": "include/configs/qemu-arm.h",
+      "patch": "diff --git a/include/configs/qemu-arm.h b/include/configs/qemu-arm.h\nindex 433e0b13a50..d45f6068607 100644\n--- a/include/configs/qemu-arm.h\n+++ b/include/configs/qemu-arm.h\n@@ -66,8 +66,6 @@\n #define CONFIG_SYS_CBSIZE 512\n \n #define CONFIG_SYS_MONITOR_BASE\t\tCONFIG_SYS_TEXT_BASE\n-#define CONFIG_SYS_MAX_FLASH_BANKS\t2\n-#define CONFIG_SYS_MAX_FLASH_BANKS_DETECT\n #define CONFIG_SYS_MAX_FLASH_SECT\t256 /* Sector: 256K, Bank: 64M */\n #define CONFIG_CFI_FLASH_USE_WEAK_ACCESSORS\n "
+    },
+    {
+      "commit_id": "0f9595b9fa68ed1634adddf989fd037909eec433",
+      "file_name": "include/configs/qemu-riscv.h",
+      "patch": "diff --git a/include/configs/qemu-riscv.h b/include/configs/qemu-riscv.h\nindex ae57f681a53..618c3b63d41 100644\n--- a/include/configs/qemu-riscv.h\n+++ b/include/configs/qemu-riscv.h\n@@ -25,8 +25,6 @@\n \n #define CONFIG_STANDALONE_LOAD_ADDR\t0x80200000\n \n-#define CONFIG_SYS_MAX_FLASH_BANKS\t2\n-\n #define RISCV_MMODE_TIMERBASE\t\t0x2000000\n #define RISCV_MMODE_TIMER_FREQ\t\t1000000\n "
+    }
+  ],
+  [
+    {
+      "commit_id": "0613c36a7a5973d58a50b764ee647099e80cc97d",
+      "file_name": "include/configs/qemu-arm.h",
+      "patch": "diff --git a/include/configs/qemu-arm.h b/include/configs/qemu-arm.h\nindex a67af73fd56..45bd94ee5c7 100644\n--- a/include/configs/qemu-arm.h\n+++ b/include/configs/qemu-arm.h\n@@ -76,7 +76,7 @@\n \n #include <config_distro_bootcmd.h>\n \n-#define CONFIG_EXTRA_ENV_SETTINGS \\\n+#define CFG_EXTRA_ENV_SETTINGS \\\n \t\"fdt_high=0xffffffff\\0\" \\\n \t\"initrd_high=0xffffffff\\0\" \\\n \t\"fdt_addr=0x40000000\\0\" \\"
+    },
+    {
+      "commit_id": "0613c36a7a5973d58a50b764ee647099e80cc97d",
+      "file_name": "include/configs/qemu-riscv.h",
+      "patch": "diff --git a/include/configs/qemu-riscv.h b/include/configs/qemu-riscv.h\nindex 35172da3ff1..20135f569eb 100644\n--- a/include/configs/qemu-riscv.h\n+++ b/include/configs/qemu-riscv.h\n@@ -34,7 +34,7 @@\n #define BOOTENV_DEV_NAME_QEMU(devtypeu, devtypel, instance) \\\n \t\"qemu \"\n \n-#define CONFIG_EXTRA_ENV_SETTINGS \\\n+#define CFG_EXTRA_ENV_SETTINGS \\\n \t\"fdt_high=0xffffffffffffffff\\0\" \\\n \t\"initrd_high=0xffffffffffffffff\\0\" \\\n \t\"kernel_addr_r=0x84000000\\0\" \\"
+    }
+  ],
+  [
+    {
+      "commit_id": "c45568cc4e51b7bbe2f3ce28d8f2566048aeebf3",
+      "file_name": "include/configs/qemu-arm.h",
+      "patch": "diff --git a/include/configs/qemu-arm.h b/include/configs/qemu-arm.h\nindex 14cae43db3a..e9f756b13ed 100644\n--- a/include/configs/qemu-arm.h\n+++ b/include/configs/qemu-arm.h\n@@ -12,8 +12,6 @@\n \n #define CONFIG_SYS_SDRAM_BASE\t\t0x40000000\n \n-#define CONFIG_SYS_BOOTM_LEN\t\tSZ_64M\n-\n /* GUIDs for capsule updatable firmware images */\n #define QEMU_ARM_UBOOT_IMAGE_GUID \\\n \tEFI_GUID(0xf885b085, 0x99f8, 0x45af, 0x84, 0x7d, \\"
+    },
+    {
+      "commit_id": "c45568cc4e51b7bbe2f3ce28d8f2566048aeebf3",
+      "file_name": "include/configs/qemu-riscv.h",
+      "patch": "diff --git a/include/configs/qemu-riscv.h b/include/configs/qemu-riscv.h\nindex a81c503d9fd..d81e5d6c862 100644\n--- a/include/configs/qemu-riscv.h\n+++ b/include/configs/qemu-riscv.h\n@@ -10,8 +10,6 @@\n \n #define CONFIG_SYS_SDRAM_BASE\t\t0x80000000\n \n-#define CONFIG_SYS_BOOTM_LEN\t\tSZ_64M\n-\n #define CONFIG_STANDALONE_LOAD_ADDR\t0x80200000\n \n #define RISCV_MMODE_TIMERBASE\t\t0x2000000"
+    }
+  ]
+]

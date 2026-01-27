@@ -212,3 +212,4 @@ v8/
 
 # API
 src/api.py
+test/

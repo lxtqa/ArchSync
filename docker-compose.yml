@@ -1,24 +1,20 @@
-services:
-  archsync:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: archsync
-    ports:
-      - "8012:8012"
-    restart: unless-stopped
-    volumes:
-      - ./diff:/diff
+version: '3.8'
 
+services:
   archsync_proxy:
     build:
       context: .
-      dockerfile: mcp/Dockerfile
+      dockerfile: Dockerfile
     container_name: archsync_proxy
     ports:
+      - "8012:8012"
       - "8013:8013"
     restart: unless-stopped
     environment:
-      - BACKEND=http://archsync:8012
+      - MCP_PORT=8013
+      - MCP_TRANSPORT=http
+      - SERVER_IP=133.133.135.53
+      - GATEWAY_BASE=https://gateway.rvpt.top
     volumes:
       - ./diff:/diff
+

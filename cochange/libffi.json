@@ -1,0 +1,36 @@
+[
+  [
+    {
+      "commit_id": "01db744b4af8665f9b7494d00cc2a1cc45ee9636",
+      "file_name": "src/aarch64/ffi.c",
+      "patch": "diff --git a/src/aarch64/ffi.c b/src/aarch64/ffi.c\nindex 964934d..94c643b 100644\n--- a/src/aarch64/ffi.c\n+++ b/src/aarch64/ffi.c\n@@ -645,7 +645,10 @@ extern void ffi_call_SYSV (struct call_context *context, void *frame,\n \t\t\t   void *closure) FFI_HIDDEN;\n \n /* Call a function with the provided arguments and capture the return\n-   value.  */\n+   value.\n+   n.b. ffi_call_SYSV will steal the alloca'd `stack` variable here for use\n+   _as its own stack_ - so we need to compile this function without ASAN */\n+FFI_ASAN_NO_SANITIZE\n static void\n ffi_call_int (ffi_cif *cif, void (*fn)(void), void *orig_rvalue,\n \t      void **avalue, void *closure)"
+    },
+    {
+      "commit_id": "01db744b4af8665f9b7494d00cc2a1cc45ee9636",
+      "file_name": "src/x86/ffi.c",
+      "patch": "diff --git a/src/x86/ffi.c b/src/x86/ffi.c\nindex b8bb178..8b53f73 100644\n--- a/src/x86/ffi.c\n+++ b/src/x86/ffi.c\n@@ -270,6 +270,9 @@ extern void FFI_DECLARE_FASTCALL ffi_call_i386(struct call_frame *, char *) FFI_\n #if defined(_MSC_VER)\n #pragma runtime_checks(\"s\", off)\n #endif\n+/* n.b. ffi_call_unix64 will steal the alloca'd `stack` variable here for use\n+   _as its own stack_ - so we need to compile this function without ASAN */\n+FFI_ASAN_NO_SANITIZE\n static void\n ffi_call_int (ffi_cif *cif, void (*fn)(void), void *rvalue,\n \t      void **avalue, void *closure)"
+    }
+  ],
+  [
+    {
+      "commit_id": "ee22ecbd11f52f8de1adbb2a6561aee2125a576a",
+      "file_name": "src/aarch64/ffi.c",
+      "patch": "diff --git a/src/aarch64/ffi.c b/src/aarch64/ffi.c\nindex 76d2938..83e5653 100644\n--- a/src/aarch64/ffi.c\n+++ b/src/aarch64/ffi.c\n@@ -832,14 +832,14 @@ ffi_prep_closure_loc (ffi_closure *closure,\n     start = ffi_closure_SYSV;\n \n #if FFI_EXEC_TRAMPOLINE_TABLE\n-#ifdef __MACH__\n-#ifdef HAVE_PTRAUTH\n+# ifdef __MACH__\n+#  ifdef HAVE_PTRAUTH\n   codeloc = ptrauth_auth_data(codeloc, ptrauth_key_function_pointer, 0);\n-#endif\n+#  endif\n   void **config = (void **)((uint8_t *)codeloc - PAGE_MAX_SIZE);\n   config[0] = closure;\n   config[1] = start;\n-#endif\n+# endif\n #else\n   static const unsigned char trampoline[16] = {\n     0x90, 0x00, 0x00, 0x58,\t/* ldr\tx16, tramp+16\t*/\n@@ -848,7 +848,7 @@ ffi_prep_closure_loc (ffi_closure *closure,\n   };\n   char *tramp = closure->tramp;\n \n-#if defined(FFI_EXEC_STATIC_TRAMP)\n+# if defined(FFI_EXEC_STATIC_TRAMP)\n   if (ffi_tramp_is_present(closure))\n     {\n       /* Initialize the static trampoline's parameters. */\n@@ -859,7 +859,7 @@ ffi_prep_closure_loc (ffi_closure *closure,\n       ffi_tramp_set_parms (closure->ftramp, start, closure);\n       goto out;\n     }\n-#endif\n+# endif\n \n   /* Initialize the dynamic trampoline. */\n   memcpy (tramp, trampoline, sizeof(trampoline));\n@@ -869,15 +869,17 @@ ffi_prep_closure_loc (ffi_closure *closure,\n   ffi_clear_cache(tramp, tramp + FFI_TRAMPOLINE_SIZE);\n \n   /* Also flush the cache for code mapping.  */\n-#ifdef _WIN32\n+# ifdef _WIN32\n   // Not using dlmalloc.c for Windows ARM64 builds\n   // so calling ffi_data_to_code_pointer() isn't necessary\n   unsigned char *tramp_code = tramp;\n-  #else\n+# else\n   unsigned char *tramp_code = ffi_data_to_code_pointer (tramp);\n-  #endif\n+# endif\n   ffi_clear_cache (tramp_code, tramp_code + FFI_TRAMPOLINE_SIZE);\n+# if defined(FFI_EXEC_STATIC_TRAMP)\n out:\n+# endif\n #endif\n \n   closure->cif = cif;"
+    },
+    {
+      "commit_id": "ee22ecbd11f52f8de1adbb2a6561aee2125a576a",
+      "file_name": "src/arm/ffi.c",
+      "patch": "diff --git a/src/arm/ffi.c b/src/arm/ffi.c\nindex 985dbee..cfd3e9d 100644\n--- a/src/arm/ffi.c\n+++ b/src/arm/ffi.c\n@@ -626,7 +626,7 @@ ffi_prep_closure_loc (ffi_closure * closure,\n   config[1] = closure_func;\n #else\n \n-#if defined(FFI_EXEC_STATIC_TRAMP)\n+# if defined(FFI_EXEC_STATIC_TRAMP)\n   if (ffi_tramp_is_present(closure))\n     {\n       /* Initialize the static trampoline's parameters. */\n@@ -637,31 +637,33 @@ ffi_prep_closure_loc (ffi_closure * closure,\n       ffi_tramp_set_parms (closure->ftramp, closure_func, closure);\n       goto out;\n     }\n-#endif\n+# endif\n \n   /* Initialize the dynamic trampoline. */\n-#ifndef _WIN32\n+# ifndef _WIN32\n   memcpy(closure->tramp, ffi_arm_trampoline, 8);\n-#else\n+# else\n   // cast away function type so MSVC doesn't set the lower bit of the function pointer\n   memcpy(closure->tramp, (void*)((uintptr_t)ffi_arm_trampoline & 0xFFFFFFFE), FFI_TRAMPOLINE_CLOSURE_OFFSET);\n-#endif\n+# endif\n \n-#if defined(__QNX__)\n+# if defined(__QNX__)\n   msync (closure->tramp, 8, MS_INVALIDATE_ICACHE);\t/* clear data map */\n   msync (codeloc, 8, MS_INVALIDATE_ICACHE);\t\t/* clear insn map */\n-#elif defined(_WIN32)\n+# elif defined(_WIN32)\n   FlushInstructionCache(GetCurrentProcess(), closure->tramp, FFI_TRAMPOLINE_SIZE);\n-#else\n+# else\n   __clear_cache(closure->tramp, closure->tramp + 8);\t/* clear data map */\n   __clear_cache(codeloc, codeloc + 8);\t\t\t/* clear insn map */\n-#endif\n-#ifdef _WIN32\n+# endif\n+# ifdef _WIN32\n   *(void(**)(void))(closure->tramp + FFI_TRAMPOLINE_CLOSURE_FUNCTION) = closure_func;\n-#else\n+# else\n   *(void (**)(void))(closure->tramp + 8) = closure_func;\n-#endif\n+# endif\n+# if defined(FFI_EXEC_STATIC_TRAMP)\n out:\n+# endif\n #endif\n \n   closure->cif = cif;"
+    },
+    {
+      "commit_id": "ee22ecbd11f52f8de1adbb2a6561aee2125a576a",
+      "file_name": "src/x86/ffi.c",
+      "patch": "diff --git a/src/x86/ffi.c b/src/x86/ffi.c\nindex 3da6716..b82d8c0 100644\n--- a/src/x86/ffi.c\n+++ b/src/x86/ffi.c\n@@ -614,7 +614,9 @@ ffi_prep_closure_loc (ffi_closure* closure,\n   tramp[9] = 0xe9;\n   *(unsigned *)(tramp + 10) = (unsigned)dest - ((unsigned)codeloc + 14);\n \n+#if defined(FFI_EXEC_STATIC_TRAMP)\n out:\n+#endif\n   closure->cif = cif;\n   closure->fun = fun;\n   closure->user_data = user_data;"
+    },
+    {
+      "commit_id": "ee22ecbd11f52f8de1adbb2a6561aee2125a576a",
+      "file_name": "src/loongarch64/ffi.c",
+      "patch": "diff --git a/src/loongarch64/ffi.c b/src/loongarch64/ffi.c\nindex ed9c15f..140be3b 100644\n--- a/src/loongarch64/ffi.c\n+++ b/src/loongarch64/ffi.c\n@@ -538,7 +538,9 @@ ffi_prep_closure_loc (ffi_closure *closure, ffi_cif *cif,\n \n   __builtin___clear_cache (codeloc, codeloc + FFI_TRAMPOLINE_SIZE);\n \n+#if defined(FFI_EXEC_STATIC_TRAMP)\n out:\n+#endif\n   closure->cif = cif;\n   closure->fun = fun;\n   closure->user_data = user_data;"
+    }
+  ]
+]

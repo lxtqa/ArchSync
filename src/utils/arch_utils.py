@@ -65,166 +65,21 @@ def has_archwords(text):
         for keyword in ["loong","loongarch"]:
             if keyword in text:
                 return "loong"
-        for keyword in ["avr"]:
-            if keyword in text:
-                return "avr"
-        for keyword in ["sparc64"]:
-            if keyword in text:
-                return "sparc64"
-        for keyword in ["sparc"]:
-            if keyword in text:
-                return "sparc"
-        for keyword in ["amdgpu"]:
-            if keyword in text:
-                return "amdgpu"
-        for keyword in ["csky"]:
-            if keyword in text:
-                return "csky"
-        for keyword in ["hexagon"]:
-            if keyword in text:
-                return "hexagon"
-        for keyword in ["m68k"]:
-            if keyword in text:
-                return "m68k"
-        for keyword in ["msp430"]:
-            if keyword in text:
-                return "msp430"
-        for keyword in ["nvptx"]:
-            if keyword in text:
-                return "nvptx"
-        for keyword in ["xcore"]:
-            if keyword in text:
-                return "xcore"
-        for keyword in ["xtensa"]:
-            if keyword in text:
-                return "xtensa"
-        for keyword in ["tricore"]:
-            if keyword in text:
-                return "tricore"
-        for keyword in ["hppa"]:
-            if keyword in text:
-                return "hppa"
-        for keyword in ["microblaze"]:
-            if keyword in text:
-                return "microblaze"
-        for keyword in ["openrisc"]:
-            if keyword in text:
-                return "openrisc"
-        for keyword in ["sh4","/sh/","/sh_","/sh-","_sh/","_sh_","-sh-","-sh_","-sh/"]:
-            if keyword in text:
-                return "sh4"
-        for keyword in ["rx"]:
-            if keyword in text:
-                return "rx"
-        for keyword in ["/arc/","/arc_","/arc-","_arc/","_arc_","-arc-","-arc_","-arc/"]:
-            if keyword in text:
-                return "arc"
-        for keyword in ["mmix"]:
-            if keyword in text:
-                return "mmix"
-        for keyword in ["bpf"]:
-            if keyword in text:
-                return "bpf"
-        for keyword in ["cris"]:
-            if keyword in text:
-                return "cris"
-        for keyword in ["fr30"]:
-            if keyword in text:
-                return "fr30"
-        for keyword in ["gcn"]:
-            if keyword in text:
-                return "gcn"
-        for keyword in ["iq2000"]:
-            if keyword in text:
-                return "iq2000"
-        for keyword in ["m32r"]:
-            if keyword in text:
-                return "m32r"
-        for keyword in ["lm32"]:
-            if keyword in text:
-                return "lm32"
-        for keyword in ["mcore"]:
-            if keyword in text:
-                return "mcore"
-        for keyword in ["nds32"]:
-            if keyword in text:
-                return "nds32"
-        for keyword in ["nios2"]:
-            if keyword in text:
-                return "nios2"
-        for keyword in ["parisc"]:
-            if keyword in text:
-                return "parisc"
-        for keyword in ["pdp11"]:
-            if keyword in text:
-                return "pdp11"
-        for keyword in ["pru"]:
-            if keyword in text:
-                return "pru"
-        for keyword in ["rs6000"]:
-            if keyword in text:
-                return "rs6000"
-        for keyword in ["vax"]:
-            if keyword in text:
-                return "vax"
-        for keyword in ["v850"]:
-            if keyword in text:
-                return "v850"
-        for keyword in ["visium"]:
-            if keyword in text:
-                return "visium"
-        for keyword in ["/um/","/um_","/um-","_um/","_um_","-um-","-um_","-um/"]:
-            if keyword in text:
-                return "um"
-        for keyword in ["epiphany"]:
-            if keyword in text:
-                return "epiphany"
-        for keyword in ["frv"]:
-            if keyword in text:
-                return "frv"
-        for keyword in ["h8300"]:
-            if keyword in text:
-                return "h8300"
-        for keyword in ["tilera"]:
-            if keyword in text:
-                return "tilera"
-        for keyword in ["xstormy16"]:
-            if keyword in text:
-                return "xstormy16"
-        for keyword in ["/pa/","/pa_","/pa-","_pa/","_pa_","-pa-","-pa_","-pa/"]:
-            if keyword in text:
-                return "pa"
         return None
 
 
 def remove_archwords(text):
     text = text.lower()
-    archs = ["shared-ia32-x64","shared-x64-ia32", \
-                    "arm64","arm","aarch32","aarch64","aarch",\
-                    "x64","x86","ia32","i386","x86_64", \
-                    "riscv64","riscv32","riscv",\
-                    "s390","s390x","systemz",\
-                    "ppc64","ppc32","ppc","powerpc64","powerpc32","powerpc",\
-                    "mips64","mips32","mips",\
-                    "loongarch64","loongarch32","loongarch","loong64","loong32","loong",\
-                    "amdgpu",\
-                    "avr",\
-                    "hppa",\
-                    "csky",\
-                    "hexagon",\
-                    "m68k",\
-                    "msp430",\
-                    "nvptx",\
-                    "sparc","sparc64",\
-                    "ve",\
-                    "xcore",\
-                    "xtensa",\
-                    "tricore",\
-                    "microblaze",\
-                    "openrisc",\
-                    "sh4","sh",\
-                    "rx",\
-                    "arc"]
+    archs = [
+                "arm64","aarch64","aarch",\
+                "arm","aarch32",\
+                "x64","x86","ia32","i386","x86_64", \
+                "riscv64","riscv32","riscv",\
+                "s390","s390x","systemz",\
+                "ppc64","ppc32","ppc","powerpc64","powerpc32","powerpc",\
+                "mips64","mips32","mips",\
+                "loongarch64","loongarch32","loongarch","loong64","loong32","loong"
+            ]
     for keyword in sorted(archs,key=len,reverse=True):
         if keyword in text:
             text = text.replace(keyword, '')
@@ -235,7 +90,7 @@ def remove_archwords(text):
 def remove_whitespace(input_string):
     return re.sub(r"(?<!\\)\\(?!\\)", "",re.sub(r'\s+', '', input_string))
 
-def isfilepara(file1, file2):
+def is_file_para(file1, file2):
     # 实现文件是否平行的逻辑
     return remove_whitespace(remove_archwords(file1)) == remove_whitespace(remove_archwords(file2))
 
@@ -255,7 +110,7 @@ def extract_name(header):
 
 patten3 = re.compile(r"^\s*(//|/\*.*\*/|/\*.*?$)")
 
-def isblockpara(block1, block2):
+def is_block_para(block1, block2):
     if block1 == "" or block2 == "":
         return block1 == block2
     if patten3.match(block1) and patten3.match(block2):
