@@ -165,6 +165,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 app = FastMCP(
     "ArchSync",
     instructions="跨架构代码同步：输入文件内容, 返回生成结果。"
+    instructions="跨架构代码同步：输入文件内容, 返回生成结果。"
 )
 
 # 后端 ArchSync 服务地址
@@ -311,6 +312,7 @@ def generate_riscv_code_with_commit_id(
             "message": "RISC-V 代码已生成"
         }
 
+
     except Exception as e:
         return {
             "success": False,
@@ -419,10 +421,17 @@ if __name__ == "__main__":
 
     # 启动 MCP
     MCP_PORT = int(os.getenv("MCP_PORT", "8013"))
+
+    # 启动 FastAPI 后台线程
+    threading.Thread(target=start_fastapi, daemon=True).start()
+
+    # 启动 MCP
+    MCP_PORT = int(os.getenv("MCP_PORT", "8013"))
     MCP_TRANSPORT = os.getenv("MCP_TRANSPORT", "http")
 
     if MCP_TRANSPORT == "stdio":
         app.run()
     else:
         app.run(transport="http", host="0.0.0.0", port=MCP_PORT)
+
 

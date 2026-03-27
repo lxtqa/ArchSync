@@ -6,25 +6,18 @@
 git clone --recurse-submodules https://github.com/lxtqa/ArchSync.git
 ```
 
-### Build
+### Build & Run
 
-Run the following command in the root directory of this project.
-
-```
-docker build -t archsync .
-```
-
-### Test & Run
-
-Run the following command in the root directory of this project.
+Run the following command in the root directory of this project to build & run.
 
 ```bash
-docker run --rm -v ./test:/diff archsync python3 gen_result.py old_loong.cc old_riscv.cc new_loong.cc -o result.cc
+docker compose up -- build
 ```
 
-or
+### Stop
+
+Run the following command in the root directory of this project to stop.
 
 ```bash
-docker run --rm -v ./test:/diff archsync python3 gen_result.py old_loong.cc old_riscv.cc new_loong.cc
+docker compose down
 ```
-

@@ -1,12 +1,16 @@
 version: '3.8'
 
+version: '3.8'
+
 services:
+  archsync_proxy:
   archsync_proxy:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: archsync_proxy
     ports:
+      - "8012:8012"
       - "8012:8012"
       - "8013:8013"
     restart: unless-stopped
@@ -17,4 +21,5 @@ services:
       - GATEWAY_BASE=https://gateway.rvpt.top
     volumes:
       - ./diff:/diff
+
 
