@@ -62,23 +62,6 @@ RUN apt-get update \
 #     && rm srcml_1.1.0-1_ubuntu22.04_amd64.deb
 
 # 目前先安装旧版本的srcml
-    && apt-get install -y --no-install-recommends \
-        wget git gdebi-core \
-#        build-essential  ocaml libnum-ocaml-dev \
-		build-essential \
-        ca-certificates \
-        openjdk-17-jdk 
-
-
-# -------------------------------------------------------
-# 安装 srcML
-# -------------------------------------------------------
-	
-# RUN wget https://github.com/srcML/srcML/releases/download/v1.1.0/srcml_1.1.0-1_ubuntu22.04_amd64.deb \
-#     && gdebi srcml_1.1.0-1_ubuntu22.04_amd64.deb -n \
-#     && rm srcml_1.1.0-1_ubuntu22.04_amd64.deb
-
-# 目前先安装旧版本的srcml
 RUN wget https://github.com/srcML/srcML/releases/download/v1.0.0/srcml_1.0.0-1_ubuntu20.04.deb \
 	&& gdebi srcml_1.0.0-1_ubuntu20.04.deb -n \
     && rm srcml_1.0.0-1_ubuntu20.04.deb
@@ -102,26 +85,15 @@ RUN /opt/gumtree/gradlew -p /opt/gumtree build \
 # -------------------------------------------------------
 # 拷贝你的 Python 项目
 # -------------------------------------------------------
-# -------------------------------------------------------
-# 拷贝你的 Python 项目
-# -------------------------------------------------------
 WORKDIR /app
 # 正确复制 src 到 /app/src，而不是覆盖 /app
 COPY src /app/src
 
 COPY archsync_mcp.py /app/archsync_mcp.py
-# 正确复制 src 到 /app/src，而不是覆盖 /app
-COPY src /app/src
-
-COPY archsync_mcp.py /app/archsync_mcp.py
 
 # 设置 Python 搜索路径
 ENV PYTHONPATH="/app"
-# 设置 Python 搜索路径
-ENV PYTHONPATH="/app"
 
-# 工作目录挂载路径
-ENV WORK_DIR=/diff
 # 工作目录挂载路径
 ENV WORK_DIR=/diff
 RUN mkdir -p /diff
@@ -130,8 +102,4 @@ VOLUME /diff
 EXPOSE 8013
 EXPOSE 8012
 
-EXPOSE 8013
-EXPOSE 8012
-
-CMD ["python3.11", "archsync_mcp.py"]
 CMD ["python3.11", "archsync_mcp.py"]

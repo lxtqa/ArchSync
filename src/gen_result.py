@@ -8,10 +8,7 @@ import re
 import os
 from concurrent.futures import ThreadPoolExecutor
 from fuzzywuzzy import process, fuzz
-from git import Repo  # 需要安装 gitpython
-
-# 假设这些工具函数已在 src.utils 中定义
-# 如果没有定义，请确保对应的 utils 文件存在
+from git import Repo
 from src.utils.ast_utils import *
 from src.utils.arch_utils import *
 from src.utils.file_utils import *
