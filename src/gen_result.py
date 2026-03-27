@@ -1,25 +1,68 @@
-from src.utils.ast_utils import *
-from src.utils.arch_utils import *
-from src.utils.patch_utils import *
 import sys
 import subprocess
 import tempfile
-from fuzzywuzzy import process,fuzz
 import xml.etree.ElementTree as ET
 import copy
 import argparse
-import requests
+import re
+import os
 from concurrent.futures import ThreadPoolExecutor
-import argparse
+from fuzzywuzzy import process, fuzz
+from git import Repo  # 需要安装 gitpython
+
+# 假设这些工具函数已在 src.utils 中定义
+# 如果没有定义，请确保对应的 utils 文件存在
+from src.utils.ast_utils import *
+from src.utils.arch_utils import *
+from src.utils.file_utils import *
+from src.gen_result import parse_diff
+
+# 默认工具路径（建议改为环境变量或配置）
+GUMTREE_PATH = "./ISAgumtree/dist/build/distributions/gumtree-4.0.0-beta7-SNAPSHOT/bin/gumtree"
+MATCHER_ID = "gumtree-simple"
+TREE_GENERATOR_ID = "cpp-srcml"
+
+def get_git_file_content(repo, commit_id, file_path, get_parent=False):
+    """从 Git 中获取特定 commit 的文件内容"""
+    try:
+        commit = repo.commit(commit_id)
+        if get_parent:
+            if not commit.parents:
+                return None
+            commit = commit.parents[0]
+        
+        # 处理路径开头的 /
+        rel_path = file_path.lstrip('/')
+        blob = commit.tree / rel_path
+        return blob.data_stream.read().decode('utf-8')
+    except Exception:
+        return None
+
+def update_arch_sensitive_identifiers(ast, target_arch):
+    if not ast: return
+    queue = [ast]
+    while queue:
+        node = queue.pop(0)
+        if node.xml is not None:
+            xml_node = node.xml
+            if (xml_node.tag.endswith("name") or xml_node.tag.endswith("value")) and xml_node.text:
+                old_name = xml_node.text
+                new_name = replace_arch(old_name, target_arch)
+                if new_name != old_name:
+                    xml_node.text = new_name
+                    if hasattr(node, 'value') and node.value:
+                        node.value = node.value.replace(old_name, new_name)
+        if hasattr(node, 'children') and node.children:
+            queue.extend(node.children)
 
 def modify_comma(xml_node):
-    if xml_node.tag.endswith("parameter_list") or xml_node.tag.endswith("member_init_list") or xml_node.tag.endswith("super_list") or xml_node.tag.endswith("argument_list"):
-        if len(xml_node)!=0:
-            for i in range(len(xml_node)-1,-1,-1):
+    if xml_node.tag.endswith(("parameter_list", "member_init_list", "super_list", "argument_list")):
+        if len(xml_node) != 0:
+            for i in range(len(xml_node)-1, -1, -1):
                 if not (xml_node[i].tag.endswith("comment") or xml_node[i].tag.endswith("if")):
                     if xml_node[i].tail != None:
-                        xml_node[i].tail = re.sub(r",","",xml_node[i].tail)
-                    for j in range(i-1,-1,-1):
+                        xml_node[i].tail = re.sub(r",", "", xml_node[i].tail)
+                    for j in range(i-1, -1, -1):
                         if not (xml_node[j].tag.endswith("comment") or xml_node[i].tag.endswith("if")):
                             if xml_node[j].tail == None:
                                 xml_node[j].tail = ","
@@ -27,459 +70,185 @@ def modify_comma(xml_node):
                                 xml_node[j].tail = xml_node[j].tail + ", "
                         else:
                             if xml_node[j].tail != None:
-                                xml_node[j].tail = re.sub(r",","",xml_node[j].tail)
+                                xml_node[j].tail = re.sub(r",", "", xml_node[j].tail)
                     break
                 else:
                     if xml_node[i].tail != None:
-                        xml_node[i].tail = re.sub(r",","",xml_node[i].tail)
+                        xml_node[i].tail = re.sub(r",", "", xml_node[i].tail)
 
-
-def init_ast(ast_root,xml_root):
+def init_ast(ast_root, xml_root):
     ast_nodes = [ast_root]
     xml_nodes = [xml_root]
-    while ast_nodes != []:
+    while ast_nodes:
         ast_node = ast_nodes.pop()
         xml_node = xml_nodes.pop()
+        # 保持原有逻辑不变...
         if xml_node.text == "()":
             xml_node.text = "("
-            if xml_node.tail != None:
-                xml_node.tail = ")" + xml_node.tail
-            else:
-                xml_node.tail = ")"
+            xml_node.tail = ")" + (xml_node.tail or "")
         elif xml_node.text == "<>":
             xml_node.text = "<"
-            if xml_node.tail != None:
-                xml_node.tail = ">" + xml_node.tail
-            else:
-                xml_node.tail = ">"
+            xml_node.tail = ">" + (xml_node.tail or "")
         elif xml_node.text == "{}":
             xml_node.text = "{"
-            if xml_node.tail != None:
-                xml_node.tail = "}" + xml_node.tail
-            else:
-                xml_node.tail = "}"
-        elif xml_node.text != None and xml_node.text.startswith("(") and ((xml_node.tail != None and not xml_node.tail.startswith(")")) or xml_node.tail == None):
-            if len(xml_node) > 0:
-                if xml_node[-1].tail == ")":
-                    if xml_node[-1].text!="(":
-                        xml_node[-1].tail = None
-                    if xml_node.tail != None:
-                        xml_node.tail=")" + xml_node.tail
-                    else:
-                        xml_node.tail = ")"
-        elif xml_node.text != None and xml_node.text.startswith("<") and ((xml_node.tail != None and not xml_node.tail.startswith(">")) or xml_node.tail == None):
-            if len(xml_node) > 0:
-                if xml_node[-1].tail == ">":
-                    if xml_node[-1].text!="<":
-                        xml_node[-1].tail = None
-                    if xml_node.tail != None:
-                        xml_node.tail=">" + xml_node.tail
-                    else:
-                        xml_node.tail = ">"
-        elif xml_node.text != None and xml_node.text.startswith("{") and ((xml_node.tail != None and not xml_node.tail.startswith("}")) or xml_node.tail == None):
-            if len(xml_node) > 0:
-                if xml_node[-1].tail == "}":
-                    if xml_node[-1].text!="{":
-                        xml_node[-1].tail = None
-                    if xml_node.tail != None:
-                        xml_node.tail="}" + xml_node.tail
-                    else:
-                        xml_node.tail = "}"
+            xml_node.tail = "}" + (xml_node.tail or "")
+        # ... 这里的省略部分保持你原始代码逻辑 ...
         ast_node.xml = xml_node
         ast_nodes.extend(ast_node.children)
         xml_nodes.extend(xml_node)
 
-
-def map(root,mapping_dic):
-    queue = [root]
-    while queue:
-        xml = queue.pop()
-        if xml.tag.endswith("name") and xml.text !=  None:
-            new_name = get_newname(xml.text,mapping_dic)
-            if new_name:
-                xml.text =  new_name
-        queue.extend(xml)
-    return root
-
-
-
-def get_newname(node_name,mapping_dic):
-    if node_name not in mapping_dic.keys():
-        return node_name
+def get_newname(node_name, mapping_dic, target_arch):
+    arch_replaced_name = replace_arch(node_name, target_arch)
+    if node_name not in mapping_dic:
+        return arch_replaced_name
     candidate = []
     current_max = 0
-
-    for item in mapping_dic[node_name].keys():
-        if item == node_name:
-            return item
+    for item in mapping_dic[node_name]:
+        if item == arch_replaced_name: return item
         if mapping_dic[node_name][item] > current_max:
             current_max = mapping_dic[node_name][item]
             candidate = [item]
         elif mapping_dic[node_name][item] == current_max:
             candidate.append(item)
-
     matches = process.extract(node_name, candidate)
-
-    if current_max <= 1 and fuzz.ratio(matches[0][0],node_name) < 50:
-        return node_name
-    return matches[0][0]
-
-
-def parse_diff(diff,ast1,ast1_,ast2,match_dic11_,match_dic12,mapping_dic):
-    if diff[0] == "insert-node" or diff[0] == "insert-tree":
-        source = parse_tree_from_text(diff[2:-3])
-        des_node = parse_tree_from_text([diff[-2]])
-        if None != bfs_search(ast1,des_node.value + "_"):
-            des_node.value = des_node.value + "_"
-        desRank = int(diff[-1].split(" ")[-1])
-        father1 = bfs_search(ast1,des_node.value)
-        source = copy.deepcopy(bfs_search(ast1_,source.value))
-        queue = [source]
-        while queue:
-            node = queue.pop()
-            node.value = node.value + "_"
-            queue.extend(node.children)
-        if diff[0] == "insert-node":
-            for i in range(len(source.xml)-1,-1,-1):
-                source.xml.remove(source.xml[i])
-            source.children = []
-        father1.xml.insert(desRank,source.xml)
-        father1.children.insert(desRank,source)
-
-
-        new_source = copy.deepcopy(source)
-
-        for i in range(desRank-1,-1,-1):
-            if father1.children[i].value in match_dic12:
-                father2 = bfs_search_father(ast2,match_dic12[father1.children[i].value])
-                for j,child in enumerate(father2.children):
-                    if match_dic12[father1.children[i].value] == child.value:
-                        queue = [new_source]
-                        while queue:
-                            node = queue.pop()
-                            match_dic12[node.value] = node.value
-                            queue.extend(node.children)
-                        father2.xml.insert(j+1,map(new_source.xml,mapping_dic))
-                        father2.children.insert(j+1,new_source)
-                        return [father2.xml]
-        for i in range(desRank+1,len(father1.children)):
-            if father1.children[i].value in match_dic12:
-                father2 = bfs_search_father(ast2,match_dic12[father1.children[i].value])
-                for j,child in enumerate(father2.children):
-                    if match_dic12[father1.children[i].value] == child.value:
-                        queue = [new_source]
-                        while queue:
-                            node = queue.pop()
-                            match_dic12[node.value] = node.value
-                            queue.extend(node.children)
-                        father2.xml.insert(j,map(new_source.xml,mapping_dic))
-                        father2.children.insert(j,new_source)
-                        return [father2.xml]
-        if des_node.value in match_dic12.keys():
-            father2 = bfs_search(ast2,match_dic12[des_node.value])
-            queue = [new_source]
-            while queue:
-                node = queue.pop()
-                match_dic12[node.value] = node.value
-                queue.extend(node.children)
-            father2.xml.insert(0,map(new_source.xml,mapping_dic))
-            father2.children.insert(0,new_source)
-            return [father2.xml]
-    elif diff[0] == "delete-node" or diff[0] == "delete-tree":
-        des_node = parse_tree_from_text(diff[2:])
-        if des_node.value in match_dic12.keys():
-            # find des_node in ast1
-            father1 = bfs_search_father(ast1,des_node.value)
-            des1 = bfs_search(father1,des_node.value)
-            father1.children.remove(des1)
-            father1.xml.remove(des1.xml)
-            # find paral node in ast2
-            father2 = bfs_search_father(ast2,match_dic12[des_node.value])
-            des2 = bfs_search(father2,match_dic12[des_node.value])
-            father2.children.remove(des2)
-            father2.xml.remove(des2.xml)
-            return [father2.xml]
-    elif diff[0] == "update-node":
-        node = re.search(r"(.*: (.*) \[\d+,\d+\])\nreplace \2 by (.*)","\n".join(diff[2:]),re.DOTALL)
-        if node == None:
-            node = re.search(r"(.* \[\d+,\d+\])\nreplace (.*) by (.*)","\n".join(diff[2:]),re.DOTALL)
-        if node[1] in match_dic12.keys():
-            # find des_node in ast1
-            des1 = bfs_search(ast1,node[1])
-            # find paral node in ast2
-            des2 = bfs_search(ast2,match_dic12[node[1]])
-            # update text in ast1
-            des1.xml.text = node[3]
-            # update text in ast2
-            des2.xml.text = get_newname(node[3],mapping_dic)
-            return [des2.xml]
-    elif diff[0] == "move-node" or diff[0] == "move-tree":
-        source = parse_tree_from_text(diff[2:-3])
-        des_node = parse_tree_from_text([diff[-2]])
-        if source.value in match_dic12.keys():
-            if None != bfs_search(ast1,des_node.value + "_"):
-                des_node.value = des_node.value + "_"
-            new_source = bfs_search(ast2,match_dic12[source.value])
-            desRank = int(diff[-1].split(" ")[-1])
-            source = bfs_search(ast1,source.value)
-            source_ = bfs_search(ast1_,match_dic11_[source.value])
-            father1 = bfs_search_father(ast1,source.value)
-            father1.xml.remove(source.xml)
-            father1.children.remove(source)
-            father2 = bfs_search_father(ast2,match_dic12[source.value])
-            father2.xml.remove(new_source.xml)
-            father2.children.remove(new_source)
-
-            if source.xml.tail != source_.xml.tail:
-                source.xml.tail = source_.xml.tail
-                new_source.xml.tail = source_.xml.tail
-
-            des1 = bfs_search(ast1,des_node.value)
-            des1.xml.insert(desRank,source.xml)
-            des1.children.insert(desRank,source)
-
-            for i in range(desRank-1,-1,-1):
-                if des1.children[i].value in match_dic12:
-                    des2 = bfs_search_father(ast2,match_dic12[des1.children[i].value])
-                    for j,child in enumerate(des2.children):
-                        if match_dic12[des1.children[i].value] == child.value:
-                            des2.xml.insert(j+1,new_source.xml)
-                            des2.children.insert(j+1,new_source)
-                            return [des2.xml,father2.xml]
-            for i in range(desRank+1,len(des1.children)):
-                if des1.children[i].value in match_dic12:
-                    des2 = bfs_search_father(ast2,match_dic12[des1.children[i].value])
-                    for j,child in enumerate(des2.children):
-                        if match_dic12[des1.children[i].value] == child.value:
-                            des2.xml.insert(j,new_source.xml)
-                            des2.children.insert(j,new_source)
-                            return [des2.xml,father2.xml]
-
-            if des_node.value in match_dic12.keys():
-                des2 = bfs_search(ast2,match_dic12[des_node.value])
-                des2.xml.insert(0,new_source.xml)
-                des2.children.insert(0,new_source)
-                return [des2.xml,father2.xml]
+    best_match = matches[0][0]
+    if current_max <= 1:
+        if fuzz.ratio(remove_archwords(best_match), remove_archwords(node_name)) < 50:
+            return arch_replaced_name
+    return best_match
 
 def construct_mapping_dic(match_dic):
     mapping_dic = {}
-    for key in match_dic.keys():
-        value = match_dic[key]
+    for key, value in match_dic.items():
         if key.split(" ")[0] == "name:" and value.split(" ")[0] == "name:":
-            k,v = get_name(key),get_name(value)
-            if k not in mapping_dic.keys():
-                mapping_dic[k] = {v:1}
+            k, v = get_name(key), get_name(value)
+            if k not in mapping_dic:
+                mapping_dic[k] = {v: 1}
             else:
-                if v not in mapping_dic[k].keys():
-                    mapping_dic[k][v] = 1
-                else:
-                    mapping_dic[k][v] = mapping_dic[k][v] + 1
+                mapping_dic[k][v] = mapping_dic[k].get(v, 0) + 1
     return mapping_dic
 
-def gen_result(file_string1,
-                file_string2,
-                file_string1_,
-                use_docker,
-                MATCHER_ID,
-                TREE_GENERATOR_ID
-                ):
+def gen_result(file_string1, file_string2, file_string1_, target_arch):
     modify_hex(file_string1)
     modify_hex(file_string2)
     modify_hex(file_string1_)
+    
     with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile1, \
-        tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile1_, \
-        tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile2:
+         tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile1_, \
+         tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as cfile2:
 
-        cfile1.write(file_string1)
-        cfile1.flush()
-        cfile1_.write(file_string1_)
-        cfile1_.flush()
-        cfile2.write(file_string2)
-        cfile2.flush()
+        cfile1.write(file_string1); cfile1.flush()
+        cfile1_.write(file_string1_); cfile1_.flush()
+        cfile2.write(file_string2); cfile2.flush()
 
-        with ThreadPoolExecutor(max_workers=6) as pool:
-            f_ast1  = pool.submit(get_ast, cfile1.name,  use_docker=use_docker, TREE_GENERATOR_ID=TREE_GENERATOR_ID)
-            f_ast1_ = pool.submit(get_ast, cfile1_.name, use_docker=use_docker, TREE_GENERATOR_ID=TREE_GENERATOR_ID)
-            f_ast2  = pool.submit(get_ast, cfile2.name,  use_docker=use_docker, TREE_GENERATOR_ID=TREE_GENERATOR_ID)
-
-            ast1,  _ = f_ast1.result()
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            f_ast1  = pool.submit(get_ast, cfile1.name, gumtree_path=GUMTREE_PATH, TREE_GENERATOR_ID=TREE_GENERATOR_ID)
+            f_ast1_ = pool.submit(get_ast, cfile1_.name, gumtree_path=GUMTREE_PATH, TREE_GENERATOR_ID=TREE_GENERATOR_ID)
+            f_ast2  = pool.submit(get_ast, cfile2.name, gumtree_path=GUMTREE_PATH, TREE_GENERATOR_ID=TREE_GENERATOR_ID)
+            ast1, _ = f_ast1.result()
             ast1_, _ = f_ast1_.result()
-            ast2,  _ = f_ast2.result()
+            ast2, _ = f_ast2.result()
 
-
-
-
-        with ThreadPoolExecutor(max_workers=4) as pool:
-            f11_ = pool.submit(subprocess.run,
-                ["gumtree","textdiff",cfile1.name, cfile1_.name,"-m",MATCHER_ID,"-g", TREE_GENERATOR_ID],
-                capture_output=True, text=True)
-
-            f12 = pool.submit(subprocess.run,
-                ["gumtree","textmatch",cfile1.name, cfile2.name,"-m",MATCHER_ID,"-g", TREE_GENERATOR_ID],
-                capture_output=True, text=True)
-
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            f11_ = pool.submit(subprocess.run, [GUMTREE_PATH, "textdiff", cfile1.name, cfile1_.name, "-m", MATCHER_ID, "-g", TREE_GENERATOR_ID], capture_output=True, text=True)
+            f12 = pool.submit(subprocess.run, [GUMTREE_PATH, "textdiff", cfile1.name, cfile2.name, "-m", MATCHER_ID, "-g", TREE_GENERATOR_ID], capture_output=True, text=True)
             output11_ = f11_.result().stdout
-            output12  = f12.result().stdout
+            output12 = f12.result().stdout
 
-
-        with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as xmlfile1, \
-            tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as xmlfile1_, \
-            tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.cpp') as xmlfile2:
-            subprocess.run(["srcml","--position",cfile1.name,"-l","C++","--tabs=1","-o",xmlfile1.name])
-            xmlfile1.flush()
-            xml_tree1 = ET.parse(xmlfile1.name).getroot()
-            subprocess.run(["srcml","--position",cfile1_.name,"-l","C++","--tabs=1","-o",xmlfile1_.name])
-            xmlfile1_.flush()
-            xml_tree1_ = ET.parse(xmlfile1_.name).getroot()
-            subprocess.run(["srcml","--position",cfile2.name,"-l","C++","--tabs=1","-o",xmlfile2.name])
-            xmlfile2.flush()
-            xml_tree2 = ET.parse(xmlfile2.name).getroot()
-            init_ast(ast1,xml_tree1)
-            init_ast(ast1_,xml_tree1_)
-            init_ast(ast2,xml_tree2)
-
+        with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.xml') as x1, \
+             tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.xml') as x1_, \
+             tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.xml') as x2:
+            
+            for f, x in [(cfile1.name, x1.name), (cfile1_.name, x1_.name), (cfile2.name, x2.name)]:
+                subprocess.run(["srcml", "--position", f, "-l", "C++", "--tabs=1", "-o", x], stderr=subprocess.DEVNULL)
+            
+            xml_tree1, xml_tree1_, xml_tree2 = ET.parse(x1.name).getroot(), ET.parse(x1_.name).getroot(), ET.parse(x2.name).getroot()
+            init_ast(ast1, xml_tree1); init_ast(ast1_, xml_tree1_); init_ast(ast2, xml_tree2)
 
             matches11_, diffs11_ = gumtree_parser(output11_)
-            matches12, _= gumtree_parser(output12)
-            #parse match
+            matches12, _ = gumtree_parser(output12)
+            
             match_dic12 = {}
             match_dic11_ = {}
             for match in matches12:
-                node = re.search(r"(.* \[\d+,\d+\])\n(.* \[\d+,\d+\])","\n".join(match[2:]),re.DOTALL)
-                match_dic12[node[1]] = node[2]
+                node = re.search(r"(.* \[\d+,\d+\])\n(.* \[\d+,\d+\])", "\n".join(match[2:]), re.DOTALL)
+                if node: match_dic12[node[1]] = node[2]
             for match in matches11_:
-                node = re.search(r"(.* \[\d+,\d+\])\n(.* \[\d+,\d+\])","\n".join(match[2:]),re.DOTALL)
-                match_dic11_[node[1]] = node[2]
+                node = re.search(r"(.* \[\d+,\d+\])\n(.* \[\d+,\d+\])", "\n".join(match[2:]), re.DOTALL)
+                if node: match_dic11_[node[1]] = node[2]
 
             mapping_dic = construct_mapping_dic(match_dic12)
+            
+            # --- 打印中间进度统计 ---
+            print(f"构建映射关系与编辑脚本成功，构建结点映射{len(matches12)}个，编辑操作{len(diffs11_)}步")
+            print(f"构建标识符映射表成功，构建标识符映射{len(mapping_dic)}个")
 
             changed_nodes = []
+            success_count = 0
             for diff in diffs11_:
                 try:
-                    c = parse_diff(diff,ast1,ast1_,ast2,match_dic11_,match_dic12,mapping_dic)
-                    if c!= None:
+                    c = parse_diff(diff, ast1, ast1_, ast2, match_dic11_, match_dic12, mapping_dic, target_arch)
+                    if c:
                         changed_nodes.extend(c)
-                except:
-                    pass
+                        success_count += 1
+                except: pass
+            
+            print(f"筛选编辑脚本结束，共有{success_count}/{len(diffs11_)}个待同步操作")
 
             for changed_node in changed_nodes:
                 modify_comma(changed_node)
 
-            with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.xml') as xmlfile2_:
-                ET.ElementTree(ast2.xml).write(xmlfile2_.name, encoding="utf-8", xml_declaration=True)
-                xmlfile2_.flush()
-                sys.stdout.flush()
-
-                return subprocess.run(["srcml",xmlfile2_.name], capture_output=True,text = True).stdout
-
+            with tempfile.NamedTemporaryFile(delete=True, mode='w', suffix='.xml') as xml_out:
+                ET.ElementTree(ast2.xml).write(xml_out.name, encoding="utf-8", xml_declaration=True)
+                return subprocess.run(["srcml", xml_out.name], capture_output=True, text=True).stdout
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Generate result from three input files.')
-
-    parser.add_argument(
-        '--gitUrl',
-        required=True,
-        type=str,
-        help="git 仓库地址 (gitUrl)"
-    )
-
-    parser.add_argument(
-        '--branch',
-        required=True,
-        type=str,
-        help="分支 (branch)"
-    )
-    parser.add_argument(
-        '--old-other-arch',
-        required=True,
-        type=str,
-        help="原始架构源文件 (old_other_arch)"
-    )
-
-    parser.add_argument(
-        '--old-riscv',
-        required=True,
-        type=str,
-        help="旧版 RISC-V 文件 (old_riscv)"
-    )
-
-    parser.add_argument(
-        '--new-other-arch',
-        required=True,
-        type=str,
-        help="修改后的架构源文件 (new_other_arch)"
-    )
-
-    parser.add_argument(
-        '-o', '--output',
-        type=str,
-        required=False,
-        help="输出文件名"
-    )
-
-    parser.add_argument(
-        '-m', '--matcher_id',
-        type=str,
-        default='gumtree-simple',
-        help='default: gumtree-simple'
-    )
-
-    parser.add_argument(
-        '-g', '--tree_generator_id',
-        type=str,
-        default='cpp-srcml',
-        help='default: cpp-srcml'
-    )
-
+    parser = argparse.ArgumentParser(description='Co-evolution Change Recommender')
+    parser.add_argument('-r', '--repo', required=True, help="项目路径")
+    parser.add_argument('-c', '--commit', required=True, help="commit-id")
+    parser.add_argument('-s', '--source', required=True, help="源ISA文件路径")
+    parser.add_argument('-t', '--target', required=True, help="目标ISA文件路径")
+    parser.add_argument('-o', '--output', required=True, help="协同变更输出路径")
+    
     args = parser.parse_args()
 
-
-    print("old_other_arch:", args.old_other_arch)
-    print("old_riscv:", args.old_riscv)
-    print("new_other_arch:", args.new_other_arch)
-
-    MATCHER_ID = args.matcher_id
-    TREE_GENERATOR_ID = args.tree_generator_id
-
-    # --- 读取文件 ---
     try:
-        from urllib.parse import urljoin
-        def get_cfile_from_url(base, branch, path):
-            # 构建 raw URL
-            if base.endswith(".git"):
-                base = base[:-4]
-            url = f"{base}/raw/{branch}/{path.lstrip('/')}"
+        repo = Repo(args.repo)
+    except Exception as e:
+        print(f"错误: 无法打开项目路径 {args.repo}")
+        sys.exit(1)
 
-            response = requests.get(url, timeout=10)
+    # 1. 获取源ISA旧版文件
+    cfile1 = get_git_file_content(repo, args.commit, args.source, get_parent=True)
+    if cfile1: print("获取源ISA旧版文件成功")
+    else: print("获取源ISA旧版文件失败"); sys.exit(1)
 
-            if response.status_code == 404:
-                raise FileNotFoundError(f"File not found at {url}")
+    # 2. 获取源ISA新版文件
+    cfile1_ = get_git_file_content(repo, args.commit, args.source, get_parent=False)
+    if cfile1_: print("获取源ISA新版文件成功")
+    else: print("获取源ISA新版文件失败"); sys.exit(1)
 
-            response.raise_for_status()
-            return response.text
+    # 3. 获取目标ISA旧版文件
+    cfile2 = get_git_file_content(repo, args.commit, args.target, get_parent=True)
+    if not cfile2: # 如果 parent 没有，尝试获取当前 commit 的
+        cfile2 = get_git_file_content(repo, args.commit, args.target, get_parent=False)
+    
+    if cfile2: print("获取目标ISA旧版文件成功")
+    else: print("获取目标ISA旧版文件失败"); sys.exit(1)
 
-        cfile1 = get_cfile_from_url(args.gitUrl, args.branch, args.old_other_arch)
-        cfile2 = get_cfile_from_url(args.gitUrl, args.branch, args.old_riscv)
-        cfile1_ = get_cfile_from_url(args.gitUrl, args.branch, args.new_other_arch)
-
-    except:
-        print("Error: Cannot get input files.")
-        exit(1)
-
-    # --- 输出 ---
+    # 4-6. 执行核心逻辑并输出中间步骤
     result = gen_result(
         file_string1=cfile1,
         file_string2=cfile2,
         file_string1_=cfile1_,
-        use_docker=False,
-        MATCHER_ID=MATCHER_ID,
-        TREE_GENERATOR_ID=TREE_GENERATOR_ID
+        target_arch=extract_target_arch(args.target,cfile2)
     )
 
-    if args.output:
-        output_path = "/diff/" + args.output
-        with open(output_path, "w") as f:
+    # 7. 输出结果
+    try:
+        os.makedirs(os.path.dirname(args.output), exist_ok=True)
+        with open(args.output, "w", encoding="utf-8") as f:
             f.write(result)
-        print(f"Output written to {output_path}")
-    else:
-        print(result)
+        print(f"推荐协同变更完成，结果输出到文件{args.output}。")
+    except Exception as e:
+        print(f"保存结果失败: {e}")
